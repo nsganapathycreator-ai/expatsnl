@@ -1575,6 +1575,26 @@
     </style>
 </head>
 <body>
+<body>
+    <!-- Hidden forms for Netlify detection -->
+    <form name="email-capture" netlify netlify-honeypot="bot-field" hidden>
+        <input type="email" name="email" />
+    </form>
+    
+    <form name="email-capture-footer" netlify netlify-honeypot="bot-field-2" hidden>
+        <input type="email" name="email" />
+    </form>
+    
+    <form name="onboarding" netlify netlify-honeypot="bot-field-3" hidden>
+        <input type="email" name="email" />
+        <input type="text" name="name" />
+        <input type="date" name="arrival_date" />
+        <input type="text" name="moving_reason" />
+        <input type="text" name="city" />
+    </form>
+
+    <!-- Landing Page -->
+    <div id="landingPage" class="landing-page">
     <!-- Landing Page -->
     <div id="landingPage" class="landing-page">
         <div class="landing-nav">
