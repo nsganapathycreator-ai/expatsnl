@@ -2542,42 +2542,38 @@
             }
         }
 
-        function handleEmailCapture(event) {
-            event.preventDefault();
-            
-            const form = event.target;
-            const formData = new FormData(form);
-            const email = form.querySelector('input[type="email"]').value;
-            
-            // Submit to Netlify
-            fetch('/', {
-                method: 'POST',
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: new URLSearchParams(formData).toString()
-            })
-            .then(() => {
-                // Store email for onboarding
-                state.userData.email = email;
-                
-                // Show onboarding screen
-                document.getElementById('landingPage').classList.add('hidden');
-                document.getElementById('onboardingScreen').classList.remove('hidden');
-                
-                // Pre-fill email in onboarding
-                document.getElementById('onboardingEmail').value = email;
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                // Still proceed even if submission fails
-                state.userData.email = email;
-                document.getElementById('landingPage').classList.add('hidden');
-                document.getElementById('onboardingScreen').classList.remove('hidden');
-                document.getElementById('onboardingEmail').value = email;
-            });
-            
-            return false;
-        }
-
+function handleEmailCapture(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    
+    const form = event.target;
+    const email = form.querySelector('input[type="email"]').value;
+    
+    if (!email) {
+        alert('Please enter your email');
+        return false;
+    }
+    
+    // Store email
+    state.userData.email = email;
+    
+    // Submit to Netlify in background
+    const formData = new FormData(form);
+    fetch('/', {
+        method: 'POST',
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString()
+    }).catch((error) => {
+        console.log('Form submission:', error);
+    });
+    
+    // Immediately show onboarding (don't wait for fetch)
+    document.getElementById('landingPage').classList.add('hidden');
+    document.getElementById('onboardingScreen').classList.remove('hidden');
+    document.getElementById('onboardingEmail').value = email;
+    
+    return false;
+}
         function handleOnboarding(event) {
             event.preventDefault();
             
