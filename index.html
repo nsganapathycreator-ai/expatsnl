@@ -1,0 +1,2904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ExpatsNL - Your Moving Companion</title>
+    <style>
+        /* ===== Design System ===== */
+        :root {
+            /* Light Theme */
+            --bg-app: #fafbfc;
+            --bg-surface: #ffffff;
+            --bg-elevated: #f5f7fa;
+            --bg-hover: #f0f2f5;
+            
+            --text-primary: #1a1d23;
+            --text-secondary: #5f6573;
+            --text-tertiary: #8a8f9d;
+            
+            --border-subtle: rgba(0, 0, 0, 0.06);
+            --border-medium: rgba(0, 0, 0, 0.12);
+            
+            --accent: #ff6b35;
+            --accent-hover: #ff7d4d;
+            --accent-light: rgba(255, 107, 53, 0.1);
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
+            
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 999px;
+            
+            --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme - Modern & Cohesive */
+            --bg-app: #0d1117;
+            --bg-surface: #161b22;
+            --bg-elevated: #1c2128;
+            --bg-hover: #21262d;
+            
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --text-tertiary: #6e7681;
+            
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-medium: rgba(255, 255, 255, 0.12);
+            
+            --accent: #ff6b35;
+            --accent-hover: #ff7d4d;
+            --accent-light: rgba(255, 107, 53, 0.15);
+            
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-app);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== Navigation ===== */
+        nav {
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+            padding: 0 24px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+        }
+
+        .logo span {
+            font-size: 24px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-links a {
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-size: 14px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--text-primary);
+            background: var(--bg-hover);
+        }
+
+        .nav-links a.active {
+            color: var(--accent);
+            background: var(--accent-light);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-theme {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            border: 1px solid var(--border-medium);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-theme:hover {
+            background: var(--bg-hover);
+            transform: scale(1.05);
+        }
+
+        .btn-premium {
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-premium:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-full);
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .avatar:hover {
+            transform: scale(1.05);
+        }
+
+        /* ===== Onboarding ===== */
+        .onboarding-screen {
+            min-height: calc(100vh - 64px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        .onboarding-card {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 48px;
+            max-width: 560px;
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .onboarding-card h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .onboarding-card .subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-medium);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 15px;
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .btn-start {
+            width: 100%;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            border: none;
+            background: var(--accent);
+            color: white;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 12px;
+        }
+
+        .btn-start:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ===== Dashboard Layout ===== */
+        .container {
+            display: grid;
+            grid-template-columns: 260px 1fr 300px;
+            gap: 24px;
+            padding: 24px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        /* ===== Sidebar ===== */
+        .sidebar {
+            position: sticky;
+            top: 88px;
+            height: fit-content;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 24px;
+        }
+
+        .progress-circle {
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .sidebar-section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+            margin-top: 24px;
+        }
+
+        .sidebar-section-title:first-of-type {
+            margin-top: 0;
+        }
+
+        .milestone-list {
+            list-style: none;
+        }
+
+        .milestone-item {
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .milestone-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .milestone-item.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .milestone-icon {
+            font-size: 18px;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 20px 0;
+        }
+
+        .filter-list {
+            list-style: none;
+        }
+
+        .filter-item {
+            padding: 10px 12px;
+            border-radius: var(--radius-md);
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .filter-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .filter-item.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .filter-icon {
+            font-size: 16px;
+            margin-right: 8px;
+        }
+
+        .filter-count {
+            font-size: 11px;
+            background: var(--bg-elevated);
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            color: var(--text-tertiary);
+            font-weight: 600;
+        }
+
+        .filter-item.active .filter-count {
+            background: var(--accent);
+            color: white;
+        }
+
+        /* ===== Main Content ===== */
+        .main-content {
+            min-height: calc(100vh - 112px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-tertiary);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .category-filter {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+
+		.category-icon {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 4px;
+			padding: 8px 10px;
+			border-radius: var(--radius-md);
+			background: var(--bg-surface);
+			border: 1px solid var(--border-subtle);
+			cursor: pointer;
+			transition: var(--transition);
+			min-width: 60px;
+		}
+        .category-icon:hover {
+            background: var(--bg-hover);
+            transform: translateY(-2px);
+        }
+
+        .category-icon.active {
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+		.category-icon-emoji {
+			font-size: 20px;
+		}
+
+		.category-icon-text {
+			font-size: 11px;
+			font-weight: 600;
+			color: var(--text-secondary);
+		}
+        .category-icon.active .category-icon-text {
+            color: var(--accent);
+        }
+
+        .tasks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .phase-section {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+        }
+
+        .phase-header {
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--bg-elevated);
+        }
+
+        .phase-header:hover {
+            background: var(--bg-hover);
+        }
+
+        .phase-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .phase-icon {
+            font-size: 28px;
+        }
+
+        .phase-title-text h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .phase-title-text p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .phase-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .phase-progress {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            font-weight: 600;
+        }
+
+        .collapse-icon {
+            font-size: 20px;
+            color: var(--text-tertiary);
+            transition: transform 0.3s ease;
+        }
+
+        .phase-section.collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .phase-content {
+            max-height: 5000px;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+
+        .phase-section.collapsed .phase-content {
+            max-height: 0;
+        }
+
+        .task-list {
+            padding: 0;
+            list-style: none;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-subtle);
+            transition: var(--transition);
+            gap: 12px;
+        }
+
+        .task-item:hover {
+            background: var(--bg-hover);
+        }
+
+        .task-checkbox-wrapper {
+            flex-shrink: 0;
+        }
+
+        .task-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border-medium);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-surface);
+        }
+
+        .task-checkbox:hover {
+            border-color: var(--accent);
+        }
+
+        .task-checkbox.checked {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .task-checkbox.checked::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .task-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .task-title {
+            font-size: 15px;
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .task-title:hover {
+            color: var(--accent);
+        }
+
+        .task-item.completed .task-title {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        .task-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .task-badge {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .task-badge.mandatory {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        .task-badge.essential {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .task-badge.recommended {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .task-badge.optional {
+            background: var(--bg-elevated);
+            color: var(--text-tertiary);
+        }
+
+        .task-deadline {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .task-reminder {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: var(--accent);
+            padding: 4px 8px;
+            background: var(--accent-light);
+            border-radius: var(--radius-md);
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            margin-left: auto;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+
+        .task-action-btn {
+            padding: 6px 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-medium);
+            background: var(--bg-surface);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .task-action-btn:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            border-color: var(--accent);
+        }
+
+        .task-action-btn.done {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .task-action-btn.done:hover {
+            background: #0d9668;
+        }
+
+        /* ===== Right Panel ===== */
+        .right-panel {
+            position: sticky;
+            top: 88px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .widget {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+        }
+
+        .widget-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .deadline-item {
+            padding: 12px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+            border-left: 3px solid var(--accent);
+        }
+
+        .deadline-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .deadline-days {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 4px;
+        }
+
+        .deadline-text {
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .achievement-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+        }
+
+        .achievement-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .achievement-icon {
+            font-size: 24px;
+        }
+
+        .achievement-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .achievement-desc {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+
+        /* ===== Calendar Page ===== */
+        .calendar-container {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .calendar-title {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 8px;
+        }
+
+        .calendar-nav button {
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-medium);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .calendar-nav button:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+
+		.calendar-grid {
+			display: grid;
+			grid-template-columns: repeat(7, 1fr);
+			gap: 8px;
+		}
+
+        .calendar-day-header {
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-tertiary);
+            padding: 12px;
+            text-transform: uppercase;
+        }
+
+.calendar-day {
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    background: var(--bg-elevated);
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+}
+
+.calendar-events {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+    font-size: 10px;
+    overflow: hidden;
+}
+
+.calendar-event-item {
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.calendar-event-item.deadline {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border-left: 2px solid var(--danger);
+}
+
+.calendar-event-item.reminder {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning);
+    border-left: 2px solid var(--warning);
+}
+
+.calendar-event-item:hover {
+    transform: translateX(2px);
+    opacity: 0.8;
+}
+
+        .calendar-day:hover {
+            background: var(--bg-hover);
+            border-color: var(--accent);
+        }
+
+        .calendar-day.other-month {
+            opacity: 0.3;
+        }
+
+        .calendar-day.today {
+            background: var(--accent-light);
+            border-color: var(--accent);
+        }
+
+        .calendar-day-number {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .calendar-events {
+            font-size: 10px;
+        }
+
+        .calendar-event-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            display: inline-block;
+            margin: 2px;
+        }
+
+        .calendar-event-dot.deadline {
+            background: var(--danger);
+        }
+
+        .calendar-event-dot.reminder {
+            background: var(--warning);
+        }
+
+        /* ===== Reminder Picker Modal ===== */
+        .reminder-picker-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reminder-picker-modal.active {
+            display: flex;
+        }
+
+        .reminder-picker-content {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .reminder-picker-content h3 {
+            font-size: 20px;
+            margin-bottom: 16px;
+        }
+
+        .reminder-picker-content input {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-medium);
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            font-size: 15px;
+            margin-bottom: 16px;
+        }
+
+        .reminder-picker-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .reminder-picker-actions button {
+            padding: 10px 20px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .reminder-picker-actions .btn-cancel {
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+        }
+
+        .reminder-picker-actions .btn-cancel:hover {
+            background: var(--bg-hover);
+        }
+
+        .reminder-picker-actions .btn-set {
+            background: var(--accent);
+            color: white;
+        }
+
+        .reminder-picker-actions .btn-set:hover {
+            background: var(--accent-hover);
+        }
+
+        /* ===== Modal ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-full);
+            border: none;
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--bg-hover);
+        }
+
+        .modal-section {
+            margin-bottom: 24px;
+        }
+
+        .modal-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .modal-section p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .modal-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .modal-section ul li {
+            padding: 8px 0;
+            color: var(--text-secondary);
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .modal-section ul li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .provider-card {
+            background: var(--bg-elevated);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .provider-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .provider-details {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .critical-tasks-section {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .critical-tasks-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .critical-task-item {
+            padding: 16px;
+            border-left: 3px solid var(--danger);
+            background: rgba(239, 68, 68, 0.05);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+        }
+
+        .critical-task-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .critical-task-title {
+            font-weight: 600;
+            color: var(--danger);
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
+
+        .critical-task-meta {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* ===== Plans ===== */
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .plan-card {
+            background: var(--bg-elevated);
+            border: 2px solid var(--border-medium);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .plan-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .plan-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .plan-price {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 16px;
+        }
+
+        .plan-features {
+            list-style: none;
+            font-size: 13px;
+            color: var(--text-secondary);
+            text-align: left;
+        }
+
+        .plan-features li {
+            padding: 6px 0;
+        }
+
+        /* ===== Utility ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ===== Scrollbar ===== */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-content">
+            <div class="logo">
+                <span>🌍</span>
+                ExpatsNL
+            </div>
+            <div class="nav-links">
+                <a id="navDashboard" class="active" onclick="showPage('dashboard')">Dashboard</a>
+                <a id="navCalendar" onclick="showPage('calendar')">Calendar</a>
+                <a onclick="showView('community')">Community</a>
+                <a onclick="showView('resources')">Resources</a>
+                <a onclick="showView('help')">Help</a>
+            </div>
+            <div class="user-menu">
+                <button class="btn-theme" onclick="toggleTheme()" id="themeToggle">🌙</button>
+                <button class="btn-premium" onclick="showUpgradeModal()">Upgrade</button>
+                <div class="avatar" onclick="showUserMenu()">SM</div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Onboarding Screen -->
+    <div id="onboardingScreen" class="onboarding-screen">
+        <div class="onboarding-card">
+            <h1>Welcome to ExpatsNL 👋</h1>
+            <p class="subtitle">Let's personalize your moving checklist based on your situation</p>
+            
+            <div class="form-group">
+                <label>Your Name</label>
+                <input type="text" id="userName" placeholder="Sarah Martinez">
+            </div>
+            
+            <div class="form-group">
+                <label>Arrival Date</label>
+                <input type="date" id="arrivalDate">
+            </div>
+            
+            <div class="form-group">
+                <label>Moving For</label>
+                <select id="movingReason">
+                    <option value="work">Work</option>
+                    <option value="study">Study</option>
+                    <option value="family">Family</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>City</label>
+                <select id="city">
+                    <option value="amsterdam">Amsterdam</option>
+                    <option value="rotterdam">Rotterdam</option>
+                    <option value="den_haag">Den Haag</option>
+                    <option value="utrecht">Utrecht</option>
+                    <option value="eindhoven">Eindhoven</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <button class="btn-start" onclick="startApp()">Start My Journey →</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboardPage" class="hidden">
+        <div class="container">
+            <!-- Left Sidebar -->
+            <aside class="sidebar">
+                <div class="progress-ring">
+                    <svg width="100" height="100">
+                        <circle cx="50" cy="50" r="45" fill="none" stroke="var(--border-subtle)" stroke-width="8"/>
+                        <circle id="progressCircle" class="progress-circle" cx="50" cy="50" r="45" fill="none" stroke="var(--accent)" stroke-width="8" stroke-dasharray="283" stroke-dashoffset="113" stroke-linecap="round"/>
+                    </svg>
+                    <div class="progress-text" id="progressPercent">0%</div>
+                </div>
+                
+                <div class="sidebar-section-title">Timeline</div>
+                <ul class="milestone-list" id="milestoneList"></ul>
+
+                <div class="sidebar-divider"></div>
+
+                <div class="sidebar-section-title">Filter by Type</div>
+                <ul class="filter-list">
+                    <li class="filter-item active" onclick="filterByType('all')">
+                        <div style="display: flex; align-items: center;">
+                            <span class="filter-icon">📋</span>
+                            <span>All Tasks</span>
+                        </div>
+                        <span class="filter-count" id="countAll">0</span>
+                    </li>
+                    <li class="filter-item" onclick="filterByType('mandatory')">
+                        <div style="display: flex; align-items: center;">
+                            <span class="filter-icon">⚠️</span>
+                            <span>Mandatory</span>
+                        </div>
+                        <span class="filter-count" id="countMandatory">0/0</span>
+                    </li>
+                    <li class="filter-item" onclick="filterByType('essential')">
+                        <div style="display: flex; align-items: center;">
+                            <span class="filter-icon">⭐</span>
+                            <span>Essential</span>
+                        </div>
+                        <span class="filter-count" id="countEssential">0/0</span>
+                    </li>
+                    <li class="filter-item" onclick="filterByType('recommended')">
+                        <div style="display: flex; align-items: center;">
+                            <span class="filter-icon">💡</span>
+                            <span>Recommended</span>
+                        </div>
+                        <span class="filter-count" id="countRecommended">0/0</span>
+                    </li>
+                    <li class="filter-item" onclick="filterByType('optional')">
+                        <div style="display: flex; align-items: center;">
+                            <span class="filter-icon">✨</span>
+                            <span>Optional</span>
+                        </div>
+                        <span class="filter-count" id="countOptional">0/0</span>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Completed</div>
+                        <div class="stat-value" id="completedStat">0/0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Days Here</div>
+                        <div class="stat-value" id="daysStat">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Progress</div>
+                        <div class="stat-value" id="progressStat">0%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Phase</div>
+                        <div class="stat-value" id="phaseStat" style="font-size: 16px;">-</div>
+                    </div>
+                </div>
+
+                <div class="category-filter" id="categoryFilter"></div>
+
+                <div class="tasks-container" id="tasksContainer"></div>
+            </main>
+
+            <!-- Right Panel -->
+            <aside class="right-panel">
+                <div class="widget">
+                    <div class="widget-title">⏰ Upcoming Deadlines</div>
+                    <div id="deadlinesContainer"></div>
+                </div>
+
+                <div class="widget" id="achievementsWidget">
+                    <div class="widget-title">🏆 Achievements</div>
+                    <div id="achievementsContainer"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+		<!-- Calendar Page -->
+	<div id="calendarPage" class="hidden">
+		<div class="container" style="grid-template-columns: 1fr; max-width: 1200px;">
+			<div class="calendar-container">
+				<div class="calendar-header">
+					<h2 class="calendar-title" id="calendarTitle">November 2025</h2>
+					<div class="calendar-nav">
+						<button onclick="changeMonth(-1)">← Prev</button>
+						<button onclick="changeMonth(0)">Today</button>
+						<button onclick="changeMonth(1)">Next →</button>
+					</div>
+				</div>
+				<div class="calendar-grid">
+					<div class="calendar-day-header">Sun</div>
+					<div class="calendar-day-header">Mon</div>
+					<div class="calendar-day-header">Tue</div>
+					<div class="calendar-day-header">Wed</div>
+					<div class="calendar-day-header">Thu</div>
+					<div class="calendar-day-header">Fri</div>
+					<div class="calendar-day-header">Sat</div>
+				</div>
+				<div id="calendarDays" class="calendar-grid"></div>
+			</div>
+		</div>
+	</div>
+
+    <!-- Task Details Modal -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle"></h2>
+                <button class="modal-close" onclick="closeTaskModal()">×</button>
+            </div>
+            <div id="modalDetails"></div>
+        </div>
+    </div>
+
+    <!-- Reminder Picker Modal -->
+    <div id="reminderPickerModal" class="reminder-picker-modal">
+        <div class="reminder-picker-content">
+            <h3>Set Reminder</h3>
+            <input type="date" id="reminderDateInput" />
+            <div class="reminder-picker-actions">
+                <button class="btn-cancel" onclick="closeReminderPicker()">Cancel</button>
+                <button class="btn-set" onclick="setReminder()">Set Reminder</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Upgrade Modal -->
+    <div id="upgradeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Upgrade Your Experience</h2>
+                <button class="modal-close" onclick="closeUpgradeModal()">×</button>
+            </div>
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <div class="plan-name">Plus</div>
+                    <div class="plan-price">€8<span style="font-size: 14px;">/mo</span></div>
+                    <ul class="plan-features">
+                        <li>✓ Full timeline</li>
+                        <li>✓ Offline access</li>
+                        <li>✓ Document vault</li>
+                        <li>✓ Priority support</li>
+                    </ul>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-name">Deals+</div>
+                    <div class="plan-price">€15<span style="font-size: 14px;">/mo</span></div>
+                    <ul class="plan-features">
+                        <li>✓ Exclusive deals</li>
+                        <li>✓ Provider compare</li>
+                        <li>✓ Savings tracker</li>
+                    </ul>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-name">Belong</div>
+                    <div class="plan-price">€25<span style="font-size: 14px;">/mo</span></div>
+                    <ul class="plan-features">
+                        <li>✓ Expert consults</li>
+                        <li>✓ Community access</li>
+                        <li>✓ Concierge</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // State management
+        let state = {
+            userData: {},
+            completedItems: new Set(),
+            reminders: {},
+            currentFilter: 'all',
+            currentPhase: 'arrival',
+            currentTypeFilter: 'all',
+            currentPage: 'dashboard',
+            currentMonth: new Date().getMonth(),
+            currentYear: new Date().getFullYear(),
+            currentReminderTask: null,
+            collapsedPhases: new Set()
+        };
+
+        // ============================================
+        // PASTE YOUR checklistData OBJECT HERE
+        // ============================================
+        // Checklist data
+        const checklistData = {
+            arrival: {
+                title: "First Week - Arrival",
+                icon: "✈️",
+                description: "Essential tasks for your first week",
+                items: [
+                    {
+                        task: "Register at gemeente (town hall)",
+                        category: "initial",
+                        type: "mandatory",
+                        description: "Register your address within 5 days of arrival.",
+                        priority: "critical",
+                        deadline: 5,
+                        details: {
+                            where: "Your local gemeente",
+                            what: "Passport, birth certificate, proof of address",
+                            tips: ["Book appointment online ASAP", "Bring originals + copies", "You'll get your BSN here"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get health insurance",
+                        category: "insurance",
+                        type: "mandatory",
+                        description: "Mandatory within 4 months. €120-150/month.",
+                        priority: "critical",
+                        deadline: 120,
+                        details: {
+                            where: "Online or directly from insurers",
+                            what: "BSN, proof of residence, bank account",
+                            tips: ["Use Zorgwijzer.nl to compare", "Basic coverage is mandatory"],
+                            providers: [
+                                { name: "Zilveren Kruis", price: "€129/month", rating: "4.5/5" },
+                                { name: "CZ", price: "€135/month", rating: "4.3/5" }
+                            ]
+                        }
+                    },
+                    {
+                        task: "Open Dutch bank account",
+                        category: "finance",
+                        type: "mandatory",
+                        description: "Required for salary and rent. Requires BSN.",
+                        priority: "critical",
+                        deadline: 14,
+                        details: {
+                            where: "Bank branches or online",
+                            what: "BSN, passport, proof of address",
+                            tips: ["ING, ABN AMRO popular", "Card takes 5-7 days"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get a Dutch phone number",
+                        category: "utilities",
+                        type: "essential",
+                        description: "Essential for banking and daily life.",
+                        priority: "important",
+                        deadline: 7,
+                        details: {
+                            where: "Provider stores or supermarkets",
+                            what: "Passport/ID",
+                            tips: ["Prepaid SIM at Albert Heijn", "KPN, Vodafone, Lebara"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get internet service",
+                        category: "utilities",
+                        type: "essential",
+                        description: "Installation takes 1-2 weeks.",
+                        priority: "important",
+                        deadline: 14,
+                        details: {
+                            where: "Online or provider stores",
+                            what: "Address, bank account",
+                            tips: ["Check fiber availability", "Bundle deals save money"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get a bike",
+                        category: "transport",
+                        type: "essential",
+                        description: "Essential for Dutch life. €150-300.",
+                        priority: "important",
+                        deadline: 30,
+                        details: {
+                            where: "Bike shops, Marktplaats, Swapfiets",
+                            what: "Money, quality lock",
+                            tips: ["Buy €50+ lock", "Register with police"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Find permanent housing",
+                        category: "housing",
+                        type: "essential",
+                        description: "Market is competitive.",
+                        priority: "critical",
+                        deadline: 60,
+                        details: {
+                            where: "Pararius.nl, Funda.nl",
+                            what: "Income proof, ID, contract",
+                            tips: ["Budget 30-40% of income", "Beware scams"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Notify employer of BSN",
+                        category: "employment",
+                        type: "mandatory",
+                        description: "Required for salary processing.",
+                        priority: "critical",
+                        deadline: 14,
+                        details: {
+                            where: "HR department",
+                            what: "BSN number",
+                            tips: ["Do this immediately after receiving BSN"],
+                            providers: []
+                        }
+                    }
+                ]
+            },
+            settling: {
+                title: "Month 1 - Settling In",
+                icon: "🏡",
+                description: "Get your daily life organized",
+                items: [
+                    {
+                        task: "Apply for 30% ruling",
+                        category: "taxes",
+                        type: "recommended",
+                        description: "Tax benefit for skilled migrants.",
+                        priority: "important",
+                        deadline: 120,
+                        details: {
+                            where: "Through employer or tax advisor",
+                            what: "Contract, proof of residence abroad",
+                            tips: ["Reduces taxable income by 30%", "Valid 5 years"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get OV-chipkaart",
+                        category: "transport",
+                        type: "essential",
+                        description: "Required for public transport.",
+                        priority: "important",
+                        deadline: 30,
+                        details: {
+                            where: "Stations, online, Albert Heijn",
+                            what: "Photo, bank account",
+                            tips: ["Anonymous: €7.50", "Always check in AND out"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Register with GP",
+                        category: "healthcare",
+                        type: "essential",
+                        description: "Choose local doctor.",
+                        priority: "important",
+                        deadline: 30,
+                        details: {
+                            where: "Local GP practices",
+                            what: "BSN, insurance, address",
+                            tips: ["Find within cycling distance", "GP first before hospital"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Setup electricity & gas",
+                        category: "utilities",
+                        type: "essential",
+                        description: "Transfer to your name.",
+                        priority: "important",
+                        deadline: 14,
+                        details: {
+                            where: "Energy provider websites",
+                            what: "Address, bank, meter readings",
+                            tips: ["Compare on Gaslicht.com", "Photo meter readings"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get water supply account",
+                        category: "utilities",
+                        type: "essential",
+                        description: "Regional water company.",
+                        priority: "important",
+                        deadline: 30,
+                        details: {
+                            where: "Regional water company",
+                            what: "Address, bank account",
+                            tips: ["€50-70/month average", "Regional monopolies"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Setup municipal taxes",
+                        category: "taxes",
+                        type: "mandatory",
+                        description: "Local taxes registration.",
+                        priority: "important",
+                        deadline: 60,
+                        details: {
+                            where: "Automatic by gemeente",
+                            what: "None - automatic",
+                            tips: ["€300-500/year", "Billed quarterly"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get renters insurance",
+                        category: "insurance",
+                        type: "essential",
+                        description: "Protects belongings and liability.",
+                        priority: "important",
+                        deadline: 30,
+                        details: {
+                            where: "Insurance companies",
+                            what: "Address, value estimate",
+                            tips: ["€5-15/month", "Often required by landlords"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Register for DigiD",
+                        category: "legal",
+                        type: "mandatory",
+                        description: "Digital ID for government.",
+                        priority: "critical",
+                        deadline: 30,
+                        details: {
+                            where: "DigiD.nl",
+                            what: "BSN, email/phone",
+                            tips: ["Letter in 5-10 days", "Enable 2FA"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get driver's license",
+                        category: "legal",
+                        type: "optional",
+                        description: "Exchange or take test.",
+                        priority: "optional",
+                        deadline: 180,
+                        details: {
+                            where: "CBR and gemeente",
+                            what: "Foreign license, BSN",
+                            tips: ["EU can exchange", "Theory in English"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Setup waste separation",
+                        category: "housing",
+                        type: "recommended",
+                        description: "Learn recycling rules.",
+                        priority: "important",
+                        deadline: 14,
+                        details: {
+                            where: "Municipality website",
+                            what: "Address",
+                            tips: ["Download waste app", "Bottle deposits"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Find a dentist",
+                        category: "healthcare",
+                        type: "optional",
+                        description: "Not covered by basic insurance.",
+                        priority: "optional",
+                        deadline: 90,
+                        details: {
+                            where: "Local practices",
+                            what: "ID, payment",
+                            tips: ["Checkup: €50-100", "Consider insurance"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get library card",
+                        category: "integration",
+                        type: "optional",
+                        description: "Free access to books and events.",
+                        priority: "optional",
+                        deadline: 60,
+                        details: {
+                            where: "Public library",
+                            what: "ID, €15-30 annual",
+                            tips: ["English books", "Free wifi"],
+                            providers: []
+                        }
+                    }
+                ]
+            },
+            integration: {
+                title: "Month 2-3 - Integration",
+                icon: "🤝",
+                description: "Integrate into Dutch society",
+                items: [
+                    {
+                        task: "Start Dutch language course",
+                        category: "education",
+                        type: "optional",
+                        description: "Important for integration.",
+                        priority: "important",
+                        deadline: 90,
+                        details: {
+                            where: "Language schools",
+                            what: "Registration, payment",
+                            tips: ["Check employer courses", "DUO loans available"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Enroll children in school",
+                        category: "education",
+                        type: "mandatory",
+                        description: "Mandatory ages 5-16.",
+                        priority: "critical",
+                        deadline: 30,
+                        details: {
+                            where: "Local schools",
+                            what: "Birth cert, BSN, records",
+                            tips: ["Public free", "International €10k-25k/year"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Register for childcare",
+                        category: "childcare",
+                        type: "recommended",
+                        description: "Subsidized for working parents.",
+                        priority: "important",
+                        deadline: 60,
+                        details: {
+                            where: "Daycare centers",
+                            what: "BSN, employment details",
+                            tips: ["Long waiting lists", "€6-9/hour before subsidy"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Apply for child benefits",
+                        category: "finance",
+                        type: "recommended",
+                        description: "Support for children under 18.",
+                        priority: "important",
+                        deadline: 90,
+                        details: {
+                            where: "SVB",
+                            what: "BSN, children's details",
+                            tips: ["€250-300 per quarter", "Auto after registration"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Join local groups",
+                        category: "integration",
+                        type: "optional",
+                        description: "Build your network.",
+                        priority: "optional",
+                        deadline: 90,
+                        details: {
+                            where: "Meetup, Facebook, clubs",
+                            what: "Interest, time",
+                            tips: ["Internations for expats", "Sports clubs"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get pension overview",
+                        category: "finance",
+                        type: "optional",
+                        description: "Understand your pension.",
+                        priority: "optional",
+                        deadline: 180,
+                        details: {
+                            where: "mijnpensioenoverzicht.nl",
+                            what: "DigiD login",
+                            tips: ["Three pillars", "Review annually"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Setup mail forwarding",
+                        category: "initial",
+                        type: "recommended",
+                        description: "Forward from previous address.",
+                        priority: "optional",
+                        deadline: 30,
+                        details: {
+                            where: "Post office",
+                            what: "Addresses",
+                            tips: ["6-12 months", "Notify institutions"],
+                            providers: []
+                        }
+                    },
+                    {
+						task: "Register at embassy",
+						  category: "legal",
+						  type: "optional",
+						  description: "Register with home embassy.",
+						  priority: "optional",
+						  deadline: 90,
+						  details: {
+							where: "Embassy or consulate",
+							what: "Passport, proof of address",
+							tips: ["Useful in emergencies"],
+							providers: []
+                        }
+                    },
+                    {
+                        task: "Understand healthcare system",
+                        category: "healthcare",
+                        type: "essential",
+                        description: "Learn how to access care.",
+                        priority: "important",
+                        deadline: 30,
+                        details: {
+                            where: "Insurer info",
+                            what: "Insurance card, GP contact",
+                            tips: ["GP first always", "Emergency: 112"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Get liability insurance",
+                        category: "insurance",
+                        type: "recommended",
+                        description: "Personal liability coverage.",
+                        priority: "important",
+                        deadline: 30,
+                        details: {
+                            where: "Insurance companies",
+                            what: "Personal details",
+                            tips: ["€3-8/month", "Very important in NL"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "File first tax return",
+                        category: "taxes",
+                        type: "mandatory",
+                        description: "Annual tax return.",
+                        priority: "critical",
+                        deadline: 365,
+                        details: {
+                            where: "Belastingdienst.nl",
+                            what: "Income statements",
+                            tips: ["Deadline: May 1st", "Keep expense records"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Apply for housing allowance",
+                        category: "finance",
+                        type: "recommended",
+                        description: "Rent subsidy.",
+                        priority: "important",
+                        deadline: 90,
+                        details: {
+                            where: "Toeslagen.nl",
+                            what: "Income, rent amount",
+                            tips: ["If rent < €880/month", "Up to €400/month"],
+                            providers: []
+                        }
+                    },
+                    {
+                        task: "Apply for healthcare allowance",
+                        category: "finance",
+                        type: "recommended",
+                        description: "Insurance cost subsidy.",
+                        priority: "important",
+                        deadline: 90,
+                        details: {
+                            where: "Toeslagen.nl",
+                            what: "Income, insurance info",
+                            tips: ["Based on income/assets", "Up to €150/month"],
+                            providers: []
+                        }
+                    }
+                ]
+            }
+        };
+
+        // ============================================
+        // END OF checklistData
+        // ============================================
+
+        function init() {
+            loadTheme();
+            loadState();
+            
+            if (state.userData && state.userData.name) {
+                document.getElementById('onboardingScreen').classList.add('hidden');
+                document.getElementById('dashboardPage').classList.remove('hidden');
+                renderDashboard();
+            }
+        }
+
+        function startApp() {
+            const name = document.getElementById('userName').value;
+            const arrivalDate = document.getElementById('arrivalDate').value;
+            const movingReason = document.getElementById('movingReason').value;
+            const city = document.getElementById('city').value;
+
+            if (!name || !arrivalDate) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            state.userData = { name, arrivalDate, movingReason, city };
+            saveState();
+
+            document.getElementById('onboardingScreen').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.remove('hidden');
+            
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            renderCategoryFilter();
+            renderStats();
+            renderMilestones();
+            renderTasks();
+            renderDeadlines();
+            renderAchievements();
+            updateTypeCounts();
+        }
+
+        function renderCategoryFilter() {
+            const container = document.getElementById('categoryFilter');
+            if (!container) return;
+
+            // Get all unique categories from checklistData
+            const categories = new Set();
+            Object.values(checklistData).forEach(phase => {
+                phase.items.forEach(item => {
+                    if (item.category) {
+                        categories.add(item.category);
+                    }
+                });
+            });
+
+            // Sort categories alphabetically
+            const sortedCategories = Array.from(categories).sort();
+
+            // Icon mapping
+            const categoryIcons = {
+                all: '📋',
+                initial: '✈️',
+                housing: '🏠',
+                insurance: '🛡️',
+                finance: '💰',
+                taxes: '📊',
+                education: '📚',
+                childcare: '👶',
+                transport: '🚲',
+                utilities: '💡',
+                legal: '⚖️',
+                employment: '💼',
+                work: '💼',
+                integration: '🤝',
+                healthcare: '🏥'
+            };
+
+            // Name mapping (for display)
+            const categoryNames = {
+                initial: 'Initial',
+                housing: 'Housing',
+                insurance: 'Insurance',
+                finance: 'Finance',
+                taxes: 'Taxes',
+                education: 'Education',
+                childcare: 'Childcare',
+                transport: 'Transport',
+                utilities: 'Utilities',
+                legal: 'Legal',
+                employment: 'Work',
+                work: 'Work',
+                integration: 'Integration',
+                healthcare: 'Healthcare'
+            };
+
+            // Build HTML
+            let html = `
+                <div class="category-icon ${state.currentFilter === 'all' ? 'active' : ''}" data-category="all" onclick="filterByCategory('all')">
+                    <div class="category-icon-emoji">📋</div>
+                    <div class="category-icon-text">All</div>
+                </div>
+            `;
+
+            sortedCategories.forEach(category => {
+                const icon = categoryIcons[category] || '📋';
+                const name = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
+                const isActive = state.currentFilter === category;
+
+                html += `
+                    <div class="category-icon ${isActive ? 'active' : ''}" data-category="${category}" onclick="filterByCategory('${category}')">
+                        <div class="category-icon-emoji">${icon}</div>
+                        <div class="category-icon-text">${name}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function renderStats() {
+            const totalItems = getTotalTasks();
+            const completedCount = state.completedItems.size;
+            const percentage = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
+
+            document.getElementById('completedStat').textContent = `${completedCount}/${totalItems}`;
+            document.getElementById('progressStat').textContent = `${percentage}%`;
+            document.getElementById('progressPercent').textContent = `${percentage}%`;
+
+            const circumference = 2 * Math.PI * 45;
+            const offset = circumference - (percentage / 100) * circumference;
+            document.getElementById('progressCircle').style.strokeDashoffset = offset;
+
+            if (state.userData.arrivalDate) {
+                const arrivalDate = new Date(state.userData.arrivalDate);
+                const today = new Date();
+                const daysSince = Math.floor((today - arrivalDate) / (1000 * 60 * 60 * 24));
+                document.getElementById('daysStat').textContent = daysSince >= 0 ? daysSince : 0;
+            }
+
+            const currentPhaseData = checklistData[state.currentPhase];
+            if (currentPhaseData) {
+                document.getElementById('phaseStat').textContent = currentPhaseData.icon + ' ' + currentPhaseData.title.split(' - ')[0];
+            }
+        }
+
+		function renderMilestones() {
+			const container = document.getElementById('milestoneList');
+			container.innerHTML = '';
+
+			Object.keys(checklistData).forEach(phaseKey => {
+				const phase = checklistData[phaseKey];
+				
+				// Calculate completed tasks for this phase
+				let completed = 0;
+				let total = phase.items.length;
+				
+				phase.items.forEach((item, index) => {
+					const itemId = `${phaseKey}-${index}`;
+					if (state.completedItems.has(itemId)) {
+						completed++;
+					}
+				});
+				
+				const li = document.createElement('li');
+				li.className = 'milestone-item';
+				if (phaseKey === state.currentPhase) {
+					li.classList.add('active');
+				}
+				li.onclick = () => {
+					state.currentPhase = phaseKey;
+					saveState();
+					renderDashboard();
+				};
+				li.innerHTML = `
+					<span class="milestone-icon">${phase.icon}</span>
+					<div style="flex: 1; min-width: 0;">
+						<div>${phase.title.split(' - ')[1] || phase.title}</div>
+						<div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">${completed}/${total}</div>
+					</div>
+				`;
+				container.appendChild(li);
+			});
+		}
+        function renderTasks() {
+            const container = document.getElementById('tasksContainer');
+            container.innerHTML = '';
+
+            Object.keys(checklistData).forEach(phaseKey => {
+                const phase = checklistData[phaseKey];
+                const phaseSection = document.createElement('div');
+                phaseSection.className = 'phase-section';
+                if (state.collapsedPhases.has(phaseKey)) {
+                    phaseSection.classList.add('collapsed');
+                }
+
+                const filteredItems = phase.items.filter(item => {
+                    const categoryMatch = state.currentFilter === 'all' || item.category === state.currentFilter;
+                    const typeMatch = state.currentTypeFilter === 'all' || item.type === state.currentTypeFilter;
+                    return categoryMatch && typeMatch;
+                });
+
+                if (filteredItems.length === 0) return;
+
+                const completedInPhase = filteredItems.filter((item, index) => 
+                    state.completedItems.has(`${phaseKey}-${phase.items.indexOf(item)}`)
+                ).length;
+
+                phaseSection.innerHTML = `
+                    <div class="phase-header" onclick="togglePhase('${phaseKey}')">
+                        <div class="phase-title">
+                            <span class="phase-icon">${phase.icon}</span>
+                            <div class="phase-title-text">
+                                <h2>${phase.title}</h2>
+                                <p>${phase.description}</p>
+                            </div>
+                        </div>
+                        <div class="phase-meta">
+                            <span class="phase-progress">${completedInPhase}/${filteredItems.length}</span>
+                            <span class="collapse-icon">▼</span>
+                        </div>
+                    </div>
+                    <div class="phase-content">
+                        <ul class="task-list" id="taskList-${phaseKey}"></ul>
+                    </div>
+                `;
+
+                container.appendChild(phaseSection);
+
+                const taskList = document.getElementById(`taskList-${phaseKey}`);
+                filteredItems.forEach((item, displayIndex) => {
+                    const actualIndex = phase.items.indexOf(item);
+                    const itemId = `${phaseKey}-${actualIndex}`;
+                    const isCompleted = state.completedItems.has(itemId);
+                    const reminder = state.reminders[itemId];
+
+                    const li = document.createElement('li');
+                    li.className = 'task-item';
+                    if (isCompleted) li.classList.add('completed');
+
+                    let reminderHTML = '';
+                    if (reminder) {
+                        const reminderDate = new Date(reminder);
+                        reminderHTML = `<span class="task-reminder">🔔 ${reminderDate.toLocaleDateString()}</span>`;
+                    }
+
+                    li.innerHTML = `
+                        <div class="task-checkbox-wrapper">
+                            <div class="task-checkbox ${isCompleted ? 'checked' : ''}" onclick="toggleTask('${itemId}')" data-task-id="${itemId}"></div>
+                        </div>
+                        <div class="task-content">
+                            <div class="task-title" onclick="showTaskDetails('${phaseKey}', ${actualIndex})">${item.task}</div>
+                            <div class="task-meta">
+                                <span class="task-badge ${item.type}">${item.type}</span>
+                                ${item.deadline ? `<span class="task-deadline">📅 ${item.deadline} days</span>` : ''}
+                                ${reminderHTML}
+                            </div>
+                        </div>
+                        <div class="task-actions">
+                            <button class="task-action-btn ${isCompleted ? 'done' : ''}" onclick="toggleTask('${itemId}')">
+                                ${isCompleted ? '✓ Done' : '✓ Mark Done'}
+                            </button>
+                            <button class="task-action-btn" onclick="openReminderPicker('${itemId}')">
+                                🔔 Reminder
+                            </button>
+                        </div>
+                    `;
+                    taskList.appendChild(li);
+                });
+            });
+        }
+
+        function togglePhase(phaseKey) {
+            if (state.collapsedPhases.has(phaseKey)) {
+                state.collapsedPhases.delete(phaseKey);
+            } else {
+                state.collapsedPhases.add(phaseKey);
+            }
+            saveState();
+            renderTasks();
+        }
+
+        function updateTypeCounts() {
+            const counts = {
+                all: 0,
+                mandatory: { total: 0, completed: 0 },
+                essential: { total: 0, completed: 0 },
+                recommended: { total: 0, completed: 0 },
+                optional: { total: 0, completed: 0 }
+            };
+
+            Object.keys(checklistData).forEach(phaseKey => {
+                const phase = checklistData[phaseKey];
+                phase.items.forEach((item, index) => {
+                    const itemId = `${phaseKey}-${index}`;
+                    const isCompleted = state.completedItems.has(itemId);
+                    
+                    counts.all++;
+                    if (counts[item.type]) {
+                        counts[item.type].total++;
+                        if (isCompleted) {
+                            counts[item.type].completed++;
+                        }
+                    }
+                });
+            });
+
+            document.getElementById('countAll').textContent = counts.all;
+            document.getElementById('countMandatory').textContent = `${counts.mandatory.completed}/${counts.mandatory.total}`;
+            document.getElementById('countEssential').textContent = `${counts.essential.completed}/${counts.essential.total}`;
+            document.getElementById('countRecommended').textContent = `${counts.recommended.completed}/${counts.recommended.total}`;
+            document.getElementById('countOptional').textContent = `${counts.optional.completed}/${counts.optional.total}`;
+        }
+
+        function filterByType(type) {
+            state.currentTypeFilter = type;
+            
+            document.querySelectorAll('.filter-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            saveState();
+            renderTasks();
+        }
+
+        function filterByCategory(category) {
+            state.currentFilter = category;
+            
+            document.querySelectorAll('.category-icon').forEach(icon => {
+                icon.classList.remove('active');
+                if (icon.dataset.category === category) {
+                    icon.classList.add('active');
+                }
+            });
+            
+            renderTasks();
+        }
+
+        function showTaskDetails(phaseKey, itemIndex) {
+            const phase = checklistData[phaseKey];
+            const item = phase.items[itemIndex];
+            
+            document.getElementById('modalTitle').textContent = item.task;
+            
+            let detailsHTML = '';
+            
+            if (item.description) {
+                detailsHTML += `
+                    <div class="modal-section">
+                        <h3>📝 Description</h3>
+                        <p>${item.description}</p>
+                    </div>
+                `;
+            }
+            
+            if (item.details) {
+                if (item.details.where) {
+                    detailsHTML += `
+                        <div class="modal-section">
+                            <h3>📍 Where</h3>
+                            <p>${item.details.where}</p>
+                        </div>
+                    `;
+                }
+                
+                if (item.details.what) {
+                    detailsHTML += `
+                        <div class="modal-section">
+                            <h3>📋 What You Need</h3>
+                            <p>${item.details.what}</p>
+                        </div>
+                    `;
+                }
+                
+                if (item.details.tips && item.details.tips.length > 0) {
+                    detailsHTML += `
+                        <div class="modal-section">
+                            <h3>💡 Tips</h3>
+                            <ul>
+                                ${item.details.tips.map(tip => `<li>${tip}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                
+                if (item.details.providers && item.details.providers.length > 0) {
+                    detailsHTML += `
+                        <div class="modal-section">
+                            <h3>🏢 Providers</h3>
+                            ${item.details.providers.map(p => `
+                                <div class="provider-card">
+                                    <div class="provider-name">${p.name}</div>
+                                    <div class="provider-details">${p.price} • ${p.rating}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+            }
+            
+            document.getElementById('modalDetails').innerHTML = detailsHTML;
+            document.getElementById('taskModal').classList.add('active');
+        }
+
+        function closeTaskModal() {
+            document.getElementById('taskModal').classList.remove('active');
+        }
+
+        function toggleTask(itemId) {
+            if (state.completedItems.has(itemId)) {
+                state.completedItems.delete(itemId);
+            } else {
+                state.completedItems.add(itemId);
+            }
+            saveState();
+            renderDashboard();
+        }
+
+        function openReminderPicker(itemId) {
+            state.currentReminderTask = itemId;
+            const existingReminder = state.reminders[itemId];
+            if (existingReminder) {
+                document.getElementById('reminderDateInput').value = existingReminder;
+            } else {
+                document.getElementById('reminderDateInput').value = '';
+            }
+            document.getElementById('reminderPickerModal').classList.add('active');
+        }
+
+        function closeReminderPicker() {
+            document.getElementById('reminderPickerModal').classList.remove('active');
+            state.currentReminderTask = null;
+        }
+
+        function setReminder() {
+            const date = document.getElementById('reminderDateInput').value;
+            if (!date) {
+                alert('Please select a date');
+                return;
+            }
+            
+            if (state.currentReminderTask) {
+                state.reminders[state.currentReminderTask] = date;
+                saveState();
+                renderDashboard();
+                if (state.currentPage === 'calendar') {
+                    renderCalendar();
+                }
+            }
+            
+            closeReminderPicker();
+        }
+
+        function renderDeadlines() {
+            const container = document.getElementById('deadlinesContainer');
+            if (!state.userData.arrivalDate) {
+                container.innerHTML = '<p style="color: var(--text-tertiary); font-size: 13px;">Set arrival date</p>';
+                return;
+            }
+
+            const arrivalDate = new Date(state.userData.arrivalDate);
+            const today = new Date();
+            let deadlines = [];
+
+            Object.keys(checklistData).forEach(phaseKey => {
+                const phase = checklistData[phaseKey];
+                phase.items.forEach((item, index) => {
+                    if (item.deadline) {
+                        const itemId = `${phaseKey}-${index}`;
+                        if (!state.completedItems.has(itemId)) {
+                            const deadlineDate = new Date(arrivalDate.getTime() + (item.deadline * 24 * 60 * 60 * 1000));
+                            const daysRemaining = Math.ceil((deadlineDate - today) / (1000 * 60 * 60 * 24));
+                            deadlines.push({ task: item.task, daysRemaining });
+                        }
+                    }
+                });
+            });
+
+            deadlines.sort((a, b) => a.daysRemaining - b.daysRemaining);
+            deadlines = deadlines.slice(0, 3);
+
+            if (deadlines.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-tertiary); font-size: 13px;">No urgent deadlines 🎉</p>';
+                return;
+            }
+
+            container.innerHTML = deadlines.map(d => `
+                <div class="deadline-item">
+                    <div class="deadline-days">${Math.abs(d.daysRemaining)} days</div>
+                    <div class="deadline-text">${d.daysRemaining < 0 ? 'Overdue: ' : ''}${d.task}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderAchievements() {
+            const container = document.getElementById('achievementsContainer');
+            const completedCount = state.completedItems.size;
+            const totalItems = getTotalTasks();
+            const percentage = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
+
+            let achievements = [];
+
+            if (completedCount >= 1) {
+                achievements.push({ icon: '🎯', name: 'Getting Started', desc: 'First task done' });
+            }
+            if (percentage >= 25) {
+                achievements.push({ icon: '🚀', name: 'Quarter Way', desc: '25% complete' });
+            }
+            if (percentage >= 50) {
+                achievements.push({ icon: '⭐', name: 'Halfway', desc: '50% complete' });
+            }
+
+            if (achievements.length === 0) {
+                document.getElementById('achievementsWidget').style.display = 'none';
+                return;
+            }
+
+            document.getElementById('achievementsWidget').style.display = 'block';
+            container.innerHTML = achievements.map(a => `
+                <div class="achievement-item">
+                    <div class="achievement-icon">${a.icon}</div>
+                    <div>
+                        <div class="achievement-name">${a.name}</div>
+                        <div class="achievement-desc">${a.desc}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getTotalTasks() {
+            let total = 0;
+            Object.values(checklistData).forEach(phase => {
+                total += phase.items.length;
+            });
+            return total;
+        }
+
+        function getCategoryIcon(category) {
+            const icons = {
+                initial: '✈️', 
+                housing: '🏠', 
+                insurance: '🛡️',
+                finance: '💰', 
+                taxes: '📊', 
+                education: '📚',
+                childcare: '👶', 
+                transport: '🚲', 
+                utilities: '💡',
+                legal: '⚖️', 
+                employment: '💼',
+                work: '💼',
+                integration: '🤝',
+                healthcare: '🏥'
+            };
+            return icons[category] || '📋';
+        }
+
+        // Calendar functions
+        function showPage(page) {
+            state.currentPage = page;
+            
+            // Update nav
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            if (page === 'dashboard') {
+                document.getElementById('navDashboard').classList.add('active');
+                document.getElementById('dashboardPage').classList.remove('hidden');
+                document.getElementById('calendarPage').classList.add('hidden');
+            } else if (page === 'calendar') {
+                document.getElementById('navCalendar').classList.add('active');
+                document.getElementById('dashboardPage').classList.add('hidden');
+                document.getElementById('calendarPage').classList.remove('hidden');
+                renderCalendar();
+            }
+            
+            saveState();
+        }
+
+
+		function renderCalendar() {
+			const monthNames = ["January", "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December"];
+			
+			document.getElementById('calendarTitle').textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+			
+			const firstDay = new Date(state.currentYear, state.currentMonth, 1);
+			const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
+			const prevLastDay = new Date(state.currentYear, state.currentMonth, 0);
+			
+			const firstDayOfWeek = firstDay.getDay();
+			const lastDate = lastDay.getDate();
+			const prevLastDate = prevLastDay.getDate();
+			
+			const daysContainer = document.getElementById('calendarDays');
+			daysContainer.innerHTML = '';
+			
+			const today = new Date();
+			const todayDate = today.getDate();
+			const todayMonth = today.getMonth();
+			const todayYear = today.getFullYear();
+			
+			// Get all events with task info
+			const events = getCalendarEvents();
+			
+			// Previous month days (to fill the first week)
+			for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+				const day = document.createElement('div');
+				day.className = 'calendar-day other-month';
+				day.innerHTML = `<div class="calendar-day-number">${prevLastDate - i}</div>`;
+				daysContainer.appendChild(day);
+			}
+			
+			// Current month days
+			for (let i = 1; i <= lastDate; i++) {
+				const day = document.createElement('div');
+				day.className = 'calendar-day';
+				
+				if (i === todayDate && state.currentMonth === todayMonth && state.currentYear === todayYear) {
+					day.classList.add('today');
+				}
+				
+				const dateStr = `${state.currentYear}-${String(state.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+				const dayEvents = events.filter(e => e.date === dateStr);
+				
+				let eventsHTML = '';
+				if (dayEvents.length > 0) {
+					eventsHTML = '<div class="calendar-events">';
+					dayEvents.forEach(event => {
+						eventsHTML += `
+							<div class="calendar-event-item ${event.type}" onclick="jumpToTask('${event.itemId}')" title="${event.title}">
+								${event.type === 'deadline' ? '📅' : '🔔'} ${event.title.substring(0, 20)}${event.title.length > 20 ? '...' : ''}
+							</div>
+						`;
+					});
+					eventsHTML += '</div>';
+				}
+				
+				day.innerHTML = `
+					<div class="calendar-day-number">${i}</div>
+					${eventsHTML}
+				`;
+				
+				daysContainer.appendChild(day);
+			}
+			
+			// Next month days (to complete the last week)
+			const totalCellsUsed = firstDayOfWeek + lastDate;
+			const remainingCells = totalCellsUsed % 7 === 0 ? 0 : 7 - (totalCellsUsed % 7);
+			
+			for (let i = 1; i <= remainingCells; i++) {
+				const day = document.createElement('div');
+				day.className = 'calendar-day other-month';
+				day.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+				daysContainer.appendChild(day);
+			}
+		}
+
+            
+            // Next month days
+            const remainingDays = 42 - (firstDayOfWeek + lastDate);
+            for (let i = 1; i <= remainingDays; i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.innerHTML = `<div class="calendar-day-number">${i}</div>`;
+                daysContainer.appendChild(day);
+            }
+        
+
+        function getCalendarEvents() {
+            const events = [];
+            
+            // Add deadlines
+            if (state.userData.arrivalDate) {
+                const arrivalDate = new Date(state.userData.arrivalDate);
+                Object.keys(checklistData).forEach(phaseKey => {
+                    const phase = checklistData[phaseKey];
+                    phase.items.forEach((item, index) => {
+                        const itemId = `${phaseKey}-${index}`;
+                        if (item.deadline && !state.completedItems.has(itemId)) {
+                            const deadlineDate = new Date(arrivalDate.getTime() + (item.deadline * 24 * 60 * 60 * 1000));
+                            const dateStr = deadlineDate.toISOString().split('T')[0];
+                            events.push({
+                                date: dateStr,
+                                type: 'deadline',
+                                title: item.task
+                            });
+                        }
+                    });
+                });
+            }
+            
+            // Add reminders
+            Object.keys(state.reminders).forEach(itemId => {
+                const reminderDate = state.reminders[itemId];
+                if (reminderDate) {
+                    events.push({
+                        date: reminderDate,
+                        type: 'reminder',
+                        title: 'Reminder'
+                    });
+                }
+            });
+            
+            return events;
+        }
+		
+			function jumpToTask(itemId) {
+    if (!itemId) return;
+    
+    // Switch to dashboard
+    showPage('dashboard');
+    
+    // Expand the phase if collapsed
+    const [phaseKey, index] = itemId.split('-');
+    state.collapsedPhases.delete(phaseKey);
+    
+    // Set filters to show all
+    state.currentFilter = 'all';
+    state.currentTypeFilter = 'all';
+    
+    // Save and render
+    saveState();
+    renderDashboard();
+    
+    // Scroll to the specific task after rendering
+    setTimeout(() => {
+        const targetCheckbox = document.querySelector(`.task-checkbox[data-task-id="${itemId}"]`);
+        if (targetCheckbox) {
+            const taskEl = targetCheckbox.closest('.task-item');
+            if (taskEl) {
+                taskEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                
+                // Highlight it temporarily
+                taskEl.style.transition = 'background 0.3s ease';
+                taskEl.style.background = 'var(--accent-light)';
+                
+                setTimeout(() => {
+                    taskEl.style.background = '';
+                }, 2500);
+            }
+        }
+    }, 300);
+}
+
+        function changeMonth(delta) {
+            if (delta === 0) {
+                // Go to today
+                const today = new Date();
+                state.currentMonth = today.getMonth();
+                state.currentYear = today.getFullYear();
+            } else {
+                state.currentMonth += delta;
+                if (state.currentMonth > 11) {
+                    state.currentMonth = 0;
+                    state.currentYear++;
+                } else if (state.currentMonth < 0) {
+                    state.currentMonth = 11;
+                    state.currentYear--;
+                }
+            }
+            renderCalendar();
+            saveState();
+        }
+
+        function showView(view) {
+            alert(`${view} page coming soon!`);
+        }
+
+        function showUpgradeModal() {
+            document.getElementById('upgradeModal').classList.add('active');
+        }
+
+        function closeUpgradeModal() {
+            document.getElementById('upgradeModal').classList.remove('active');
+        }
+
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            html.setAttribute('data-theme', newTheme);
+            document.getElementById('themeToggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+            if (document.getElementById('themeToggle')) {
+                document.getElementById('themeToggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+            }
+        }
+
+        function showUserMenu() {
+            alert('User menu coming soon!');
+        }
+
+        function saveState() {
+            const stateToSave = {
+                userData: state.userData,
+                completedItems: Array.from(state.completedItems),
+                reminders: state.reminders,
+                currentFilter: state.currentFilter,
+                currentPhase: state.currentPhase,
+                currentTypeFilter: state.currentTypeFilter,
+                currentPage: state.currentPage,
+                currentMonth: state.currentMonth,
+                currentYear: state.currentYear,
+                collapsedPhases: Array.from(state.collapsedPhases)
+            };
+            localStorage.setItem('expatsnl', JSON.stringify(stateToSave));
+        }
+
+        function loadState() {
+            const saved = localStorage.getItem('expatsnl');
+            if (saved) {
+                const loaded = JSON.parse(saved);
+                state.userData = loaded.userData || {};
+                state.completedItems = new Set(loaded.completedItems || []);
+                state.reminders = loaded.reminders || {};
+                state.currentFilter = loaded.currentFilter || 'all';
+                state.currentPhase = loaded.currentPhase || 'arrival';
+                state.currentTypeFilter = loaded.currentTypeFilter || 'all';
+                state.currentPage = loaded.currentPage || 'dashboard';
+                state.currentMonth = loaded.currentMonth !== undefined ? loaded.currentMonth : new Date().getMonth();
+                state.currentYear = loaded.currentYear || new Date().getFullYear();
+                state.collapsedPhases = new Set(loaded.collapsedPhases || []);
+            }
+        }
+
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+            if (event.target.classList.contains('reminder-picker-modal')) {
+                event.target.classList.remove('active');
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
