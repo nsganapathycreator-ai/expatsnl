@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Complete moving checklist for expats relocating to the Netherlands. Track tasks, deadlines, and get helpful tips.">
     <title>ExpatsNL - Your Complete Moving Guide to the Netherlands</title>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
     <style>
         /* ===== Design System ===== */
         :root {
@@ -12,31 +18,24 @@
             --bg-surface: #ffffff;
             --bg-elevated: #f5f7fa;
             --bg-hover: #f0f2f5;
-            
             --text-primary: #1a1d23;
             --text-secondary: #5f6573;
             --text-tertiary: #8a8f9d;
-            
             --border-subtle: rgba(0, 0, 0, 0.06);
             --border-medium: rgba(0, 0, 0, 0.12);
-            
             --accent: #ff6b35;
             --accent-hover: #ff7d4d;
             --accent-light: rgba(255, 107, 53, 0.1);
-            
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
             --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
-            
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
             --radius-full: 999px;
-            
             --transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
@@ -45,33 +44,17 @@
             --bg-surface: #161b22;
             --bg-elevated: #1c2128;
             --bg-hover: #21262d;
-            
             --text-primary: #e6edf3;
             --text-secondary: #8b949e;
             --text-tertiary: #6e7681;
-            
             --border-subtle: rgba(255, 255, 255, 0.08);
             --border-medium: rgba(255, 255, 255, 0.12);
-            
-            --accent: #ff6b35;
-            --accent-hover: #ff7d4d;
-            --accent-light: rgba(255, 107, 53, 0.15);
-            
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            
             --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
             --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4);
             --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
             background: var(--bg-app);
@@ -79,1512 +62,173 @@
             line-height: 1.6;
             transition: background 0.3s ease, color 0.3s ease;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* ===== Landing Page Styles ===== */
-        .landing-page {
-            min-height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .landing-nav {
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .landing-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 24px;
-            font-weight: 700;
-            color: white;
-        }
-
-        .landing-logo span {
-            font-size: 32px;
-        }
-
-        .btn-theme-landing {
-            padding: 8px 16px;
-            border-radius: var(--radius-full);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-theme-landing:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        .hero-section {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 40px;
-            text-align: center;
-            color: white;
-        }
-
-        .hero-badge {
+        .hidden { display: none !important; }
+        .loading-spinner {
             display: inline-block;
-            background: rgba(255, 255, 255, 0.2);
-            padding: 8px 20px;
-            border-radius: var(--radius-full);
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 24px;
-            backdrop-filter: blur(10px);
-        }
-
-        .hero-title {
-            font-size: 64px;
-            font-weight: 800;
-            line-height: 1.1;
-            margin-bottom: 24px;
-            letter-spacing: -0.02em;
-        }
-
-        .hero-subtitle {
-            font-size: 24px;
-            opacity: 0.95;
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .email-capture-form {
-            max-width: 500px;
-            margin: 0 auto 60px;
-            background: white;
-            padding: 8px;
-            border-radius: var(--radius-full);
-            display: flex;
-            gap: 8px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .email-capture-form input {
-            flex: 1;
-            padding: 16px 24px;
-            border: none;
-            border-radius: var(--radius-full);
-            font-size: 16px;
-            outline: none;
-            color: var(--text-primary);
-        }
-
-        .email-capture-form button {
-            padding: 16px 32px;
-            border: none;
-            border-radius: var(--radius-full);
-            background: var(--accent);
-            color: white;
-            font-weight: 700;
-            font-size: 16px;
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-        }
-
-        .email-capture-form button:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        .trust-indicators {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            margin-bottom: 80px;
-        }
-
-        .trust-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        .app-preview {
-            background: white;
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-
-        .app-preview-placeholder {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
-            border-radius: 12px;
-            aspect-ratio: 16/9;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-tertiary);
-            font-size: 18px;
-            font-weight: 600;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .app-preview-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 4px;
-            height: 100%;
-            padding: 20px;
-        }
-
-        .preview-card {
-            background: white;
-            border-radius: 8px;
-            padding: 16px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .preview-card-title {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            margin-bottom: 8px;
-        }
-
-        .preview-card-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .features-section {
-            background: white;
-            padding: 100px 40px;
-        }
-
-        .features-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .section-title {
-            font-size: 48px;
-            font-weight: 800;
-            text-align: center;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-        }
-
-        .section-subtitle {
-            font-size: 20px;
-            text-align: center;
-            color: var(--text-secondary);
-            margin-bottom: 60px;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-        }
-
-        .feature-card {
-            text-align: center;
-        }
-
-        .feature-icon {
-            font-size: 56px;
-            margin-bottom: 20px;
-        }
-
-        .feature-title {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .feature-description {
-            font-size: 16px;
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .benefits-section {
-            background: var(--bg-elevated);
-            padding: 100px 40px;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 60px;
-            max-width: 1200px;
-            margin: 0 auto;
-            align-items: center;
-        }
-
-        .benefit-content h3 {
-            font-size: 36px;
-            font-weight: 800;
-            margin-bottom: 20px;
-            color: var(--text-primary);
-        }
-
-        .benefit-list {
-            list-style: none;
-        }
-
-        .benefit-list li {
-            padding: 16px 0;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: var(--text-secondary);
-        }
-
-        .benefit-check {
-            width: 24px;
-            height: 24px;
-            background: var(--success);
-            border-radius: 50%;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            font-size: 14px;
-        }
-
-        .benefit-image {
-            background: white;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: var(--shadow-lg);
-            aspect-ratio: 4/3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-tertiary);
-        }
-
-        .cta-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 100px 40px;
-            text-align: center;
-            color: white;
-        }
-
-        .cta-section h2 {
-            font-size: 48px;
-            font-weight: 800;
-            margin-bottom: 24px;
-        }
-
-        .cta-section p {
-            font-size: 20px;
-            margin-bottom: 40px;
-            opacity: 0.95;
-        }
-
-        /* ===== Navigation ===== */
-        nav {
-            background: var(--bg-surface);
-            border-bottom: 1px solid var(--border-subtle);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            backdrop-filter: blur(10px);
-        }
-
-        .nav-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            height: 64px;
-            padding: 0 24px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
-            letter-spacing: -0.02em;
-        }
-
-        .logo span {
-            font-size: 24px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 8px;
-        }
-
-        .nav-links a {
-            padding: 8px 16px;
-            border-radius: var(--radius-md);
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-weight: 500;
-            font-size: 14px;
-            transition: var(--transition);
-            cursor: pointer;
-        }
-
-        .nav-links a:hover {
-            color: var(--text-primary);
-            background: var(--bg-hover);
-        }
-
-        .nav-links a.active {
-            color: var(--accent);
-            background: var(--accent-light);
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .btn-theme {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-full);
-            border: 1px solid var(--border-medium);
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            font-size: 18px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .btn-theme:hover {
-            background: var(--bg-hover);
-            transform: scale(1.05);
-        }
-
-        .btn-premium {
-            padding: 8px 20px;
-            border-radius: var(--radius-full);
-            border: none;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .btn-premium:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-        }
-
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-full);
-            background: var(--accent);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .avatar:hover {
-            transform: scale(1.05);
-        }
-
-        /* ===== Onboarding ===== */
-        .onboarding-screen {
-            min-height: calc(100vh - 64px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
-        }
-
-        .onboarding-card {
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            padding: 48px;
-            max-width: 560px;
-            width: 100%;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .onboarding-card h1 {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.02em;
-        }
-
-        .onboarding-card .subtitle {
-            color: var(--text-secondary);
-            margin-bottom: 32px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 12px 16px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-medium);
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            font-size: 15px;
-            transition: var(--transition);
-        }
-
-        .form-group input:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px var(--accent-light);
-        }
-
-        .form-note {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            margin-top: 4px;
-        }
-
-        .btn-start {
-            width: 100%;
-            padding: 14px;
-            border-radius: var(--radius-md);
-            border: none;
-            background: var(--accent);
-            color: white;
-            font-weight: 600;
-            font-size: 16px;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 12px;
-        }
-
-        .btn-start:hover {
-            background: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-md);
-        }
-
-        /* ===== Dashboard Layout ===== */
-        .container {
-            display: grid;
-            grid-template-columns: 260px 1fr 300px;
-            gap: 24px;
-            padding: 24px;
-            max-width: 1800px;
-            margin: 0 auto;
-        }
-
-        /* ===== Sidebar ===== */
-        .sidebar {
-            position: sticky;
-            top: 88px;
-            height: fit-content;
-        }
-
-        .progress-ring {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            margin: 0 auto 24px;
-        }
-
-        .progress-circle {
-            transform: rotate(-90deg);
-            transform-origin: 50% 50%;
-            transition: stroke-dashoffset 0.5s ease;
-        }
-
-        .progress-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 22px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .sidebar-section-title {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-tertiary);
-            margin-bottom: 12px;
-            margin-top: 24px;
-        }
-
-        .sidebar-section-title:first-of-type {
-            margin-top: 0;
-        }
-
-        .milestone-list {
-            list-style: none;
-        }
-
-        .milestone-item {
-            padding: 10px 12px;
-            border-radius: var(--radius-md);
-            margin-bottom: 6px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .milestone-item:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-        }
-
-        .milestone-item.active {
-            background: var(--accent-light);
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .milestone-icon {
-            font-size: 18px;
-        }
-
-        .sidebar-divider {
-            height: 1px;
-            background: var(--border-subtle);
-            margin: 20px 0;
-        }
-
-        .filter-list {
-            list-style: none;
-        }
-
-        .filter-item {
-            padding: 10px 12px;
-            border-radius: var(--radius-md);
-            margin-bottom: 6px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .filter-item:hover {
-            background: var(--bg-hover);
-            color: var(--text-primary);
-        }
-
-        .filter-item.active {
-            background: var(--accent-light);
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .filter-icon {
-            font-size: 16px;
-            margin-right: 8px;
-        }
-
-        .filter-count {
-            font-size: 11px;
-            background: var(--bg-elevated);
-            padding: 2px 8px;
-            border-radius: var(--radius-full);
-            color: var(--text-tertiary);
-            font-weight: 600;
-        }
-
-        .filter-item.active .filter-count {
-            background: var(--accent);
-            color: white;
-        }
-
-        /* ===== Main Content ===== */
-        .main-content {
-            min-height: calc(100vh - 112px);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .stat-card {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 16px;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            box-shadow: var(--shadow-md);
-            transform: translateY(-2px);
-        }
-
-        .stat-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: var(--text-tertiary);
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-
-        .stat-value {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--text-primary);
-        }
-
-        .category-filter {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            overflow-x: auto;
-            padding-bottom: 4px;
-        }
-
-        .category-icon {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 10px;
-            border-radius: var(--radius-md);
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            cursor: pointer;
-            transition: var(--transition);
-            min-width: 60px;
-        }
-
-        .category-icon:hover {
-            background: var(--bg-hover);
-            transform: translateY(-2px);
-        }
-
-        .category-icon.active {
-            background: var(--accent-light);
-            border-color: var(--accent);
-        }
-
-        .category-icon-emoji {
-            font-size: 20px;
-        }
-
-        .category-icon-text {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-secondary);
-        }
-
-        .category-icon.active .category-icon-text {
-            color: var(--accent);
-        }
-
-        .tasks-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .phase-section {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            overflow: hidden;
-        }
-
-        .phase-header {
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: var(--transition);
-            background: var(--bg-elevated);
-        }
-
-        .phase-header:hover {
-            background: var(--bg-hover);
-        }
-
-        .phase-title {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .phase-icon {
-            font-size: 28px;
-        }
-
-        .phase-title-text h2 {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-
-        .phase-title-text p {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .phase-meta {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .phase-progress {
-            font-size: 13px;
-            color: var(--text-tertiary);
-            font-weight: 600;
-        }
-
-        .collapse-icon {
-            font-size: 20px;
-            color: var(--text-tertiary);
-            transition: transform 0.3s ease;
-        }
-
-        .phase-section.collapsed .collapse-icon {
-            transform: rotate(-90deg);
-        }
-
-        .phase-content {
-            max-height: 5000px;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-        }
-
-        .phase-section.collapsed .phase-content {
-            max-height: 0;
-        }
-
-        .task-list {
-            padding: 0;
-            list-style: none;
-        }
-
-        .task-item {
-            display: flex;
-            align-items: center;
-            padding: 16px 24px;
-            border-top: 1px solid var(--border-subtle);
-            transition: var(--transition);
-            gap: 12px;
-        }
-
-        .task-item:hover {
-            background: var(--bg-hover);
-        }
-
-        .task-checkbox-wrapper {
-            flex-shrink: 0;
-        }
-
-        .task-checkbox {
             width: 20px;
             height: 20px;
-            border: 2px solid var(--border-medium);
-            border-radius: 6px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-surface);
-        }
-
-        .task-checkbox:hover {
-            border-color: var(--accent);
-        }
-
-        .task-checkbox.checked {
-            background: var(--success);
-            border-color: var(--success);
-        }
-
-        .task-checkbox.checked::after {
-            content: '✓';
-            color: white;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .task-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .task-title {
-            font-size: 15px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .task-title:hover {
-            color: var(--accent);
-        }
-
-        .task-item.completed .task-title {
-            text-decoration: line-through;
-            color: var(--text-tertiary);
-        }
-
-        .task-meta {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
-        }
-
-        .task-badge {
-            font-size: 11px;
-            padding: 4px 10px;
-            border-radius: var(--radius-full);
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-
-        .task-badge.mandatory {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-        }
-
-        .task-badge.essential {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-        }
-
-        .task-badge.recommended {
-            background: rgba(16, 185, 129, 0.1);
-            color: var(--success);
-        }
-
-        .task-badge.optional {
-            background: var(--bg-elevated);
-            color: var(--text-tertiary);
-        }
-
-        .task-deadline {
-            font-size: 12px;
-            color: var(--text-tertiary);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .task-reminder {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 12px;
-            color: var(--accent);
-            padding: 4px 8px;
-            background: var(--accent-light);
-            border-radius: var(--radius-md);
-        }
-
-        .task-actions {
-            display: flex;
-            gap: 8px;
-            margin-left: auto;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .task-item:hover .task-actions {
-            opacity: 1;
-        }
-
-        .task-action-btn {
-            padding: 6px 12px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-medium);
-            background: var(--bg-surface);
-            color: var(--text-secondary);
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        .task-action-btn:hover {
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            border-color: var(--accent);
-        }
-
-        .task-action-btn.done {
-            background: var(--success);
-            color: white;
-            border-color: var(--success);
-        }
-
-        .task-action-btn.done:hover {
-            background: #0d9668;
-        }
-
-        /* ===== Right Panel ===== */
-        .right-panel {
-            position: sticky;
-            top: 88px;
-            height: fit-content;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .widget {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 20px;
-        }
-
-        .widget-title {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .deadline-item {
-            padding: 12px;
-            background: var(--bg-elevated);
-            border-radius: var(--radius-md);
-            margin-bottom: 10px;
-            border-left: 3px solid var(--accent);
-        }
-
-        .deadline-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .deadline-days {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 4px;
-        }
-
-        .deadline-text {
-            font-size: 13px;
-            color: var(--text-primary);
-        }
-
-        .achievement-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            background: var(--bg-elevated);
-            border-radius: var(--radius-md);
-            margin-bottom: 10px;
-        }
-
-        .achievement-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .achievement-icon {
-            font-size: 24px;
-        }
-
-        .achievement-name {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .achievement-desc {
-            font-size: 11px;
-            color: var(--text-tertiary);
-        }
-
-        /* ===== Calendar Page ===== */
-        .calendar-container {
-            background: var(--bg-surface);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-        }
-
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .calendar-title {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .calendar-nav {
-            display: flex;
-            gap: 8px;
-        }
-
-        .calendar-nav button {
-            padding: 8px 16px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-medium);
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 600;
-        }
-
-        .calendar-nav button:hover {
-            background: var(--bg-hover);
-            border-color: var(--accent);
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-        }
-
-        .calendar-day-header {
-            text-align: center;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--text-tertiary);
-            padding: 12px;
-            text-transform: uppercase;
-        }
-
-        .calendar-day {
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
-            padding: 8px;
-            cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            background: var(--bg-elevated);
-            min-height: 100px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .calendar-day:hover {
-            background: var(--bg-hover);
-            border-color: var(--accent);
-        }
-
-        .calendar-day.other-month {
-            opacity: 0.3;
-        }
-
-        .calendar-day.today {
-            background: var(--accent-light);
-            border-color: var(--accent);
-        }
-
-        .calendar-day-number {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 4px;
-        }
-
-        .calendar-events {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            margin-top: 4px;
-            font-size: 10px;
-            overflow: hidden;
-        }
-
-        .calendar-event-item {
-            padding: 4px 6px;
-            border-radius: 4px;
-            font-size: 10px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .calendar-event-item.deadline {
-            background: rgba(239, 68, 68, 0.1);
-            color: var(--danger);
-            border-left: 2px solid var(--danger);
-        }
-
-        .calendar-event-item.reminder {
-            background: rgba(245, 158, 11, 0.1);
-            color: var(--warning);
-            border-left: 2px solid var(--warning);
-        }
-
-        .calendar-event-item:hover {
-            transform: translateX(2px);
-            opacity: 0.8;
-        }
-
-        /* ===== Reminder Picker Modal ===== */
-        .reminder-picker-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .reminder-picker-modal.active {
-            display: flex;
-        }
-
-        .reminder-picker-content {
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .reminder-picker-content h3 {
-            font-size: 20px;
-            margin-bottom: 16px;
-        }
-
-        .reminder-picker-content input {
-            width: 100%;
-            padding: 12px;
-            border-radius: var(--radius-md);
-            border: 1px solid var(--border-medium);
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            font-size: 15px;
-            margin-bottom: 16px;
-        }
-
-        .reminder-picker-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-        }
-
-        .reminder-picker-actions button {
-            padding: 10px 20px;
-            border-radius: var(--radius-md);
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .reminder-picker-actions .btn-cancel {
-            background: var(--bg-elevated);
-            color: var(--text-secondary);
-        }
-
-        .reminder-picker-actions .btn-cancel:hover {
-            background: var(--bg-hover);
-        }
-
-        .reminder-picker-actions .btn-set {
-            background: var(--accent);
-            color: white;
-        }
-
-        .reminder-picker-actions .btn-set:hover {
-            background: var(--accent-hover);
-        }
-
-        /* ===== Modal ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 999;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(4px);
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            padding: 32px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-lg);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .modal-header h2 {
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .modal-close {
-            width: 32px;
-            height: 32px;
-            border-radius: var(--radius-full);
-            border: none;
-            background: var(--bg-elevated);
-            color: var(--text-primary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            transition: var(--transition);
-        }
-
-        .modal-close:hover {
-            background: var(--bg-hover);
-        }
-
-        .modal-section {
-            margin-bottom: 24px;
-        }
-
-        .modal-section h3 {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 12px;
-            color: var(--text-primary);
-        }
-
-        .modal-section p {
-            color: var(--text-secondary);
-            line-height: 1.6;
-        }
-
-        .modal-section ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .modal-section ul li {
-            padding: 8px 0;
-            color: var(--text-secondary);
-            padding-left: 20px;
-            position: relative;
-        }
-
-        .modal-section ul li::before {
-            content: '•';
-            position: absolute;
-            left: 0;
-            color: var(--accent);
-            font-weight: 700;
-        }
-
-        .provider-card {
-            background: var(--bg-elevated);
-            border-radius: var(--radius-md);
-            padding: 12px;
-            margin-bottom: 8px;
-        }
-
-        .provider-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .provider-details {
-            font-size: 13px;
-            color: var(--text-tertiary);
-        }
-
-        /* ===== Plans ===== */
-        .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-            margin-top: 24px;
-        }
-
-        .plan-card {
-            background: var(--bg-elevated);
-            border: 2px solid var(--border-medium);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .plan-card:hover {
-            border-color: var(--accent);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-md);
-        }
-
-        .plan-name {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .plan-price {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--accent);
-            margin-bottom: 16px;
-        }
-
-        .plan-features {
-            list-style: none;
-            font-size: 13px;
-            color: var(--text-secondary);
-            text-align: left;
-        }
-
-        .plan-features li {
-            padding: 6px 0;
-        }
-
-        /* ===== Utility ===== */
-        .hidden {
-            display: none !important;
-        }
-
-        /* ===== Scrollbar ===== */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-medium);
-            border-radius: var(--radius-full);
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-tertiary);
-        }
-
-        /* ===== Responsive ===== */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 42px;
-            }
-            .hero-subtitle {
-                font-size: 18px;
-            }
-            .email-capture-form {
-                flex-direction: column;
-            }
-            .benefits-grid {
-                grid-template-columns: 1fr;
-            }
-            .container {
-                grid-template-columns: 1fr;
-            }
-            .sidebar, .right-panel {
-                position: static;
-            }
-        }
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* Landing Page */
+        .landing-page { min-height: 100vh; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .landing-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .landing-logo { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 700; color: white; }
+        .landing-logo span { font-size: 32px; }
+        .btn-theme-landing { padding: 8px 16px; border-radius: var(--radius-full); border: 2px solid rgba(255, 255, 255, 0.3); background: rgba(255, 255, 255, 0.1); color: white; font-weight: 600; cursor: pointer; transition: var(--transition); }
+        .hero-section { max-width: 1200px; margin: 0 auto; padding: 80px 40px; text-align: center; color: white; }
+        .hero-badge { display: inline-block; background: rgba(255, 255, 255, 0.2); padding: 8px 20px; border-radius: var(--radius-full); font-size: 14px; font-weight: 600; margin-bottom: 24px; }
+        .hero-title { font-size: 64px; font-weight: 800; line-height: 1.1; margin-bottom: 24px; letter-spacing: -0.02em; }
+        .hero-subtitle { font-size: 24px; opacity: 0.95; margin-bottom: 40px; }
+        .email-capture-form { max-width: 500px; margin: 0 auto 60px; background: white; padding: 8px; border-radius: var(--radius-full); display: flex; gap: 8px; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); }
+        .email-capture-form input { flex: 1; padding: 16px 24px; border: none; border-radius: var(--radius-full); font-size: 16px; outline: none; }
+        .email-capture-form button { padding: 16px 32px; border: none; border-radius: var(--radius-full); background: var(--accent); color: white; font-weight: 700; font-size: 16px; cursor: pointer; white-space: nowrap; }
+        .trust-indicators { display: flex; justify-content: center; gap: 40px; margin-bottom: 80px; }
+        .trust-item { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+
+        /* Navigation */
+        nav { background: var(--bg-surface); border-bottom: 1px solid var(--border-subtle); position: sticky; top: 0; z-index: 100; }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; height: 64px; padding: 0 24px; }
+        .logo { display: flex; align-items: center; gap: 12px; font-size: 20px; font-weight: 700; color: var(--accent); }
+        .logo span { font-size: 24px; }
+        .nav-links { display: flex; gap: 8px; }
+        .nav-links a { padding: 8px 16px; border-radius: var(--radius-md); text-decoration: none; color: var(--text-secondary); font-weight: 500; font-size: 14px; transition: var(--transition); cursor: pointer; }
+        .nav-links a:hover { color: var(--text-primary); background: var(--bg-hover); }
+        .nav-links a.active { color: var(--accent); background: var(--accent-light); }
+        .user-menu { display: flex; align-items: center; gap: 12px; }
+        .btn-theme { width: 36px; height: 36px; border-radius: var(--radius-full); border: 1px solid var(--border-medium); background: var(--bg-elevated); color: var(--text-primary); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .avatar { width: 36px; height: 36px; border-radius: var(--radius-full); background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 14px; cursor: pointer; }
+
+        /* Onboarding */
+        .onboarding-screen { min-height: calc(100vh - 64px); display: flex; align-items: center; justify-content: center; padding: 2rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); }
+        .onboarding-card { background: var(--bg-surface); border-radius: var(--radius-lg); padding: 48px; max-width: 560px; width: 100%; box-shadow: var(--shadow-lg); }
+        .onboarding-card h1 { font-size: 32px; font-weight: 700; margin-bottom: 8px; }
+        .onboarding-card .subtitle { color: var(--text-secondary); margin-bottom: 32px; }
+        .google-btn { width: 100%; padding: 14px; border-radius: var(--radius-md); border: 1px solid var(--border-medium); background: white; color: var(--text-primary); font-weight: 600; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 24px; }
+        [data-theme="dark"] .google-btn { background: var(--bg-elevated); }
+        .divider { text-align: center; color: var(--text-tertiary); margin: 20px 0; font-size: 14px; position: relative; }
+        .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 40%; height: 1px; background: var(--border-subtle); }
+        .divider::before { left: 0; }
+        .divider::after { right: 0; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-medium); background: var(--bg-elevated); color: var(--text-primary); font-size: 15px; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); }
+        .btn-start { width: 100%; padding: 14px; border-radius: var(--radius-md); border: none; background: var(--accent); color: white; font-weight: 600; font-size: 16px; cursor: pointer; margin-top: 12px; }
+
+        /* Dashboard */
+        .container { display: grid; grid-template-columns: 260px 1fr 300px; gap: 24px; padding: 24px; max-width: 1800px; margin: 0 auto; }
+        .sidebar { position: sticky; top: 88px; height: fit-content; }
+        .progress-ring { position: relative; width: 100px; height: 100px; margin: 0 auto 24px; }
+        .progress-circle { transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 0.5s ease; }
+        .progress-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 22px; font-weight: 700; color: var(--accent); }
+        .sidebar-section-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); margin: 24px 0 12px; }
+        .milestone-list, .filter-list { list-style: none; }
+        .milestone-item, .filter-item { padding: 10px 12px; border-radius: var(--radius-md); margin-bottom: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-secondary); }
+        .milestone-item:hover, .filter-item:hover { background: var(--bg-hover); }
+        .milestone-item.active, .filter-item.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
+        .filter-item { justify-content: space-between; }
+        .filter-count { font-size: 11px; background: var(--bg-elevated); padding: 2px 8px; border-radius: var(--radius-full); color: var(--text-tertiary); font-weight: 600; }
+        .filter-item.active .filter-count { background: var(--accent); color: white; }
+        .sidebar-divider { height: 1px; background: var(--border-subtle); margin: 20px 0; }
+
+        .main-content { min-height: calc(100vh - 112px); }
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 16px; }
+        .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-tertiary); margin-bottom: 6px; font-weight: 600; }
+        .stat-value { font-size: 24px; font-weight: 700; }
+        .category-filter { display: flex; gap: 12px; margin-bottom: 24px; overflow-x: auto; }
+        .category-icon { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 8px 10px; border-radius: var(--radius-md); background: var(--bg-surface); border: 1px solid var(--border-subtle); cursor: pointer; min-width: 60px; }
+        .category-icon.active { background: var(--accent-light); border-color: var(--accent); }
+        .category-icon-emoji { font-size: 20px; }
+        .category-icon-text { font-size: 11px; font-weight: 600; color: var(--text-secondary); }
+        .category-icon.active .category-icon-text { color: var(--accent); }
+
+        .phase-section { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 20px; }
+        .phase-header { padding: 20px 24px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; background: var(--bg-elevated); }
+        .phase-title { display: flex; align-items: center; gap: 12px; }
+        .phase-icon { font-size: 28px; }
+        .phase-title-text h2 { font-size: 20px; font-weight: 700; margin-bottom: 2px; }
+        .phase-title-text p { font-size: 13px; color: var(--text-secondary); }
+        .phase-meta { display: flex; align-items: center; gap: 16px; }
+        .phase-progress { font-size: 13px; color: var(--text-tertiary); font-weight: 600; }
+        .collapse-icon { font-size: 20px; color: var(--text-tertiary); transition: transform 0.3s ease; }
+        .phase-section.collapsed .collapse-icon { transform: rotate(-90deg); }
+        .phase-content { max-height: 5000px; overflow: hidden; transition: max-height 0.4s ease; }
+        .phase-section.collapsed .phase-content { max-height: 0; }
+
+        .task-list { padding: 0; list-style: none; }
+        .task-item { display: flex; align-items: center; padding: 16px 24px; border-top: 1px solid var(--border-subtle); gap: 12px; }
+        .task-item:hover { background: var(--bg-hover); }
+        .task-checkbox { width: 20px; height: 20px; border: 2px solid var(--border-medium); border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; background: var(--bg-surface); }
+        .task-checkbox.checked { background: var(--success); border-color: var(--success); }
+        .task-checkbox.checked::after { content: '✓'; color: white; font-size: 14px; font-weight: 700; }
+        .task-content { flex: 1; min-width: 0; }
+        .task-title { font-size: 15px; font-weight: 500; margin-bottom: 4px; cursor: pointer; }
+        .task-item.completed .task-title { text-decoration: line-through; color: var(--text-tertiary); }
+        .task-meta { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .task-badge { font-size: 11px; padding: 4px 10px; border-radius: var(--radius-full); font-weight: 600; text-transform: uppercase; }
+        .task-badge.mandatory { background: rgba(239, 68, 68, 0.1); color: var(--danger); }
+        .task-badge.essential { background: rgba(245, 158, 11, 0.1); color: var(--warning); }
+        .task-badge.recommended { background: rgba(16, 185, 129, 0.1); color: var(--success); }
+        .task-badge.optional { background: var(--bg-elevated); color: var(--text-tertiary); }
+        .task-reminder { display: flex; align-items: center; gap: 4px; font-size: 12px; color: var(--accent); padding: 4px 8px; background: var(--accent-light); border-radius: var(--radius-md); }
+        .task-actions { display: flex; gap: 8px; margin-left: auto; opacity: 0; }
+        .task-item:hover .task-actions { opacity: 1; }
+        .task-action-btn { padding: 6px 12px; border-radius: var(--radius-md); border: 1px solid var(--border-medium); background: var(--bg-surface); color: var(--text-secondary); font-size: 12px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .task-action-btn.done { background: var(--success); color: white; border-color: var(--success); }
+
+        .right-panel { position: sticky; top: 88px; height: fit-content; display: flex; flex-direction: column; gap: 20px; }
+        .widget { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 20px; }
+        .widget-title { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+        .deadline-item { padding: 12px; background: var(--bg-elevated); border-radius: var(--radius-md); margin-bottom: 10px; border-left: 3px solid var(--accent); }
+        .deadline-days { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+        .deadline-text { font-size: 13px; }
+
+        /* Calendar */
+        .calendar-container { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-lg); padding: 24px; }
+        .calendar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .calendar-title { font-size: 24px; font-weight: 700; }
+        .calendar-nav { display: flex; gap: 8px; }
+        .calendar-nav button { padding: 8px 16px; border-radius: var(--radius-md); border: 1px solid var(--border-medium); background: var(--bg-elevated); color: var(--text-primary); cursor: pointer; font-weight: 600; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; }
+        .calendar-day-header { text-align: center; font-size: 12px; font-weight: 700; color: var(--text-tertiary); padding: 12px; text-transform: uppercase; }
+        .calendar-day { border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 8px; cursor: pointer; background: var(--bg-elevated); min-height: 100px; display: flex; flex-direction: column; }
+        .calendar-day.other-month { opacity: 0.3; }
+        .calendar-day.today { background: var(--accent-light); border-color: var(--accent); }
+        .calendar-day-number { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
+        .calendar-events { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; }
+        .calendar-event-item { padding: 4px 6px; border-radius: 4px; font-size: 10px; font-weight: 600; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .calendar-event-item.deadline { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-left: 2px solid var(--danger); }
+        .calendar-event-item.reminder { background: rgba(245, 158, 11, 0.1); color: var(--warning); border-left: 2px solid var(--warning); }
+
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999; align-items: center; justify-content: center; }
+        .modal.active { display: flex; }
+        .modal-content { background: var(--bg-surface); border-radius: var(--radius-lg); padding: 32px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+        .modal-close { width: 32px; height: 32px; border-radius: var(--radius-full); border: none; background: var(--bg-elevated); cursor: pointer; font-size: 18px; }
+        .reminder-picker-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1000; align-items: center; justify-content: center; }
+        .reminder-picker-modal.active { display: flex; }
+        .reminder-picker-content { background: var(--bg-surface); border-radius: var(--radius-lg); padding: 24px; max-width: 400px; width: 90%; }
+        .reminder-picker-content input { width: 100%; padding: 12px; border-radius: var(--radius-md); border: 1px solid var(--border-medium); background: var(--bg-elevated); color: var(--text-primary); font-size: 15px; margin-bottom: 16px; }
+        .reminder-picker-actions { display: flex; gap: 12px; justify-content: flex-end; }
+        .reminder-picker-actions button { padding: 10px 20px; border-radius: var(--radius-md); border: none; font-weight: 600; cursor: pointer; }
+        .btn-cancel { background: var(--bg-elevated); color: var(--text-secondary); }
+        .btn-set { background: var(--accent); color: white; }
     </style>
 </head>
 <body>
-<body>
-    <!-- Hidden forms for Netlify detection -->
+    <!-- Hidden forms for Netlify -->
     <form name="email-capture" netlify netlify-honeypot="bot-field" hidden>
         <input type="email" name="email" />
     </form>
-    
-    <form name="email-capture-footer" netlify netlify-honeypot="bot-field-2" hidden>
-        <input type="email" name="email" />
-    </form>
-    
     <form name="onboarding" netlify netlify-honeypot="bot-field-3" hidden>
         <input type="email" name="email" />
         <input type="text" name="name" />
@@ -1595,183 +239,53 @@
 
     <!-- Landing Page -->
     <div id="landingPage" class="landing-page">
-    <!-- Landing Page -->
-    <div id="landingPage" class="landing-page">
         <div class="landing-nav">
-            <div class="landing-logo">
-                <span>🌍</span>
-                ExpatsNL
-            </div>
+            <div class="landing-logo"><span>🌍</span>ExpatsNL</div>
             <button class="btn-theme-landing" onclick="toggleTheme()" id="landingThemeToggle">🌙</button>
         </div>
-
         <div class="hero-section">
             <div class="hero-badge">🎉 Trusted by 1,000+ Expats</div>
             <h1 class="hero-title">Your Complete Guide to Moving to the Netherlands</h1>
-            <p class="hero-subtitle">
-                Stop feeling overwhelmed. Get a personalized checklist, deadlines, and expert tips for every step of your move.
-            </p>
-
-            <form name="email-capture" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="email-capture-form" onsubmit="return handleEmailCapture(event)">
+            <p class="hero-subtitle">Stop feeling overwhelmed. Get a personalized checklist, deadlines, and expert tips for every step of your move.</p>
+            <form name="email-capture-form" method="POST" data-netlify="true" class="email-capture-form" onsubmit="return handleEmailCapture(event)">
                 <input type="hidden" name="form-name" value="email-capture" />
-                <p style="display: none;">
-                    <label>Don't fill this out: <input name="bot-field" /></label>
-                </p>
-                <input type="email" name="email" id="landingEmail" placeholder="Enter your email" required>
+                <input type="email" name="email" placeholder="Enter your email" required>
                 <button type="submit">Get Started Free →</button>
             </form>
-
             <div class="trust-indicators">
-                <div class="trust-item">
-                    <span>✓</span>
-                    <span>100% Free</span>
-                </div>
-                <div class="trust-item">
-                    <span>✓</span>
-                    <span>No Credit Card</span>
-                </div>
-                <div class="trust-item">
-                    <span>✓</span>
-                    <span>Setup in 2 minutes</span>
-                </div>
+                <div class="trust-item"><span>✓</span><span>100% Free</span></div>
+                <div class="trust-item"><span>✓</span><span>No Credit Card</span></div>
+                <div class="trust-item"><span>✓</span><span>Setup in 2 minutes</span></div>
             </div>
-
-            <div class="app-preview">
-                <div class="app-preview-placeholder">
-                    <div class="app-preview-grid">
-                        <div class="preview-card">
-                            <div class="preview-card-title">Completed</div>
-                            <div class="preview-card-value">24/47</div>
-                        </div>
-                        <div class="preview-card">
-                            <div class="preview-card-title">Progress</div>
-                            <div class="preview-card-value">51%</div>
-                        </div>
-                        <div class="preview-card">
-                            <div class="preview-card-title">Phase</div>
-                            <div class="preview-card-value" style="font-size: 16px;">✈️ Arrival</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="features-section">
-            <div class="features-container">
-                <h2 class="section-title">Everything You Need in One Place</h2>
-                <p class="section-subtitle">We've organized the chaos of moving into a simple, step-by-step process</p>
-
-                <div class="features-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">✅</div>
-                        <h3 class="feature-title">Personalized Checklist</h3>
-                        <p class="feature-description">Get tasks tailored to your situation - work visa, family move, or student relocation.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⏰</div>
-                        <h3 class="feature-title">Smart Deadlines</h3>
-                        <p class="feature-description">Never miss important dates. Track mandatory registrations and document deadlines.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">💡</div>
-                        <h3 class="feature-title">Expert Tips</h3>
-                        <p class="feature-description">Learn from 1,000+ expats who've successfully made the move before you.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📅</div>
-                        <h3 class="feature-title">Calendar View</h3>
-                        <p class="feature-description">Visualize your tasks and reminders in an intuitive monthly calendar.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🏆</div>
-                        <h3 class="feature-title">Track Progress</h3>
-                        <p class="feature-description">Stay motivated with visual progress tracking and achievement milestones.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📱</div>
-                        <h3 class="feature-title">Works Everywhere</h3>
-                        <p class="feature-description">Access your checklist from any device - desktop, tablet, or mobile.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="benefits-section">
-            <div class="benefits-grid">
-                <div class="benefit-content">
-                    <h3>From Overwhelmed to Organized</h3>
-                    <ul class="benefit-list">
-                        <li>
-                            <span class="benefit-check">✓</span>
-                            <span>Register at gemeente within 5 days (we remind you!)</span>
-                        </li>
-                        <li>
-                            <span class="benefit-check">✓</span>
-                            <span>Get your BSN number sorted immediately</span>
-                        </li>
-                        <li>
-                            <span class="benefit-check">✓</span>
-                            <span>Open Dutch bank account with confidence</span>
-                        </li>
-                        <li>
-                            <span class="benefit-check">✓</span>
-                            <span>Never forget health insurance deadlines</span>
-                        </li>
-                        <li>
-                            <span class="benefit-check">✓</span>
-                            <span>Find housing without the stress</span>
-                        </li>
-                        <li>
-                            <span class="benefit-check">✓</span>
-                            <span>Handle taxes like a local</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="benefit-image">
-                    📊 Interactive Dashboard Preview
-                </div>
-            </div>
-        </div>
-
-        <div class="cta-section">
-            <h2>Ready to Make Your Move Stress-Free?</h2>
-            <p>Join 1,000+ expats who successfully navigated their move with ExpatsNL</p>
-            
-            <form name="email-capture-footer" method="POST" data-netlify="true" netlify-honeypot="bot-field-2" class="email-capture-form" onsubmit="return handleEmailCapture(event)">
-                <input type="hidden" name="form-name" value="email-capture-footer" />
-                <p style="display: none;">
-                    <label>Don't fill this out: <input name="bot-field-2" /></label>
-                </p>
-                <input type="email" name="email" placeholder="Enter your email" required>
-                <button type="submit">Start Now - It's Free →</button>
-            </form>
         </div>
     </div>
 
-    <!-- Onboarding Screen -->
+    <!-- Onboarding -->
     <div id="onboardingScreen" class="onboarding-screen hidden">
         <div class="onboarding-card">
             <h1>Welcome to ExpatsNL 👋</h1>
-            <p class="subtitle">Let's personalize your moving checklist based on your situation</p>
-            
-            <form name="onboarding" method="POST" data-netlify="true" netlify-honeypot="bot-field-3" onsubmit="return handleOnboarding(event)">
+            <p class="subtitle">Let's personalize your moving checklist</p>
+            <button onclick="signInWithGoogle()" class="google-btn" id="googleSignInBtn">
+                <svg width="20" height="20" viewBox="0 0 24 24">
+                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                </svg>
+                <span id="googleBtnText">Continue with Google</span>
+            </button>
+            <div class="divider">or fill manually</div>
+            <form name="onboarding-form" method="POST" data-netlify="true" onsubmit="return handleOnboarding(event)">
                 <input type="hidden" name="form-name" value="onboarding" />
-                <p style="display: none;">
-                    <label>Don't fill this out: <input name="bot-field-3" /></label>
-                </p>
-                
                 <input type="hidden" name="email" id="onboardingEmail" />
-                
                 <div class="form-group">
-                    <label>Your Name <span style="color: var(--accent);">*</span></label>
+                    <label>Your Name *</label>
                     <input type="text" id="userName" name="name" placeholder="Sarah Martinez" required>
                 </div>
-                
                 <div class="form-group">
-                    <label>Arrival Date <span style="color: var(--accent);">*</span></label>
+                    <label>Arrival Date *</label>
                     <input type="date" id="arrivalDate" name="arrival_date" required>
                 </div>
-                
                 <div class="form-group">
                     <label>Moving For</label>
                     <select id="movingReason" name="moving_reason">
@@ -1781,47 +295,38 @@
                         <option value="other">Other</option>
                     </select>
                 </div>
-                
                 <div class="form-group">
                     <label>City</label>
                     <select id="city" name="city">
                         <option value="amsterdam">Amsterdam</option>
                         <option value="rotterdam">Rotterdam</option>
-                        <option value="den_haag">Den Haag</option>
                         <option value="utrecht">Utrecht</option>
-                        <option value="eindhoven">Eindhoven</option>
                         <option value="other">Other</option>
                     </select>
                 </div>
-                
                 <button type="submit" class="btn-start">Create My Checklist →</button>
             </form>
         </div>
     </div>
 
-    <!-- App Navigation (hidden initially) -->
+    <!-- App Nav -->
     <nav id="appNav" class="hidden">
         <div class="nav-content">
-            <div class="logo">
-                <span>🌍</span>
-                ExpatsNL
-            </div>
+            <div class="logo"><span>🌍</span>ExpatsNL</div>
             <div class="nav-links">
                 <a id="navDashboard" class="active" onclick="showPage('dashboard')">Dashboard</a>
                 <a id="navCalendar" onclick="showPage('calendar')">Calendar</a>
             </div>
             <div class="user-menu">
                 <button class="btn-theme" onclick="toggleTheme()" id="themeToggle">🌙</button>
-                <button class="btn-premium" onclick="showUpgradeModal()">Upgrade</button>
                 <div class="avatar" onclick="showUserMenu()" id="userAvatar">SM</div>
             </div>
         </div>
     </nav>
 
-    <!-- Dashboard Page -->
+    <!-- Dashboard -->
     <div id="dashboardPage" class="hidden">
         <div class="container">
-            <!-- Left Sidebar -->
             <aside class="sidebar">
                 <div class="progress-ring">
                     <svg width="100" height="100">
@@ -1830,53 +335,33 @@
                     </svg>
                     <div class="progress-text" id="progressPercent">0%</div>
                 </div>
-                
                 <div class="sidebar-section-title">Timeline</div>
                 <ul class="milestone-list" id="milestoneList"></ul>
-
                 <div class="sidebar-divider"></div>
-
                 <div class="sidebar-section-title">Filter by Type</div>
                 <ul class="filter-list">
                     <li class="filter-item active" onclick="filterByType('all')">
-                        <div style="display: flex; align-items: center;">
-                            <span class="filter-icon">📋</span>
-                            <span>All Tasks</span>
-                        </div>
+                        <div style="display: flex; align-items: center;"><span style="font-size:16px;margin-right:8px">📋</span><span>All Tasks</span></div>
                         <span class="filter-count" id="countAll">0</span>
                     </li>
                     <li class="filter-item" onclick="filterByType('mandatory')">
-                        <div style="display: flex; align-items: center;">
-                            <span class="filter-icon">⚠️</span>
-                            <span>Mandatory</span>
-                        </div>
+                        <div style="display: flex; align-items: center;"><span style="font-size:16px;margin-right:8px">⚠️</span><span>Mandatory</span></div>
                         <span class="filter-count" id="countMandatory">0/0</span>
                     </li>
                     <li class="filter-item" onclick="filterByType('essential')">
-                        <div style="display: flex; align-items: center;">
-                            <span class="filter-icon">⭐</span>
-                            <span>Essential</span>
-                        </div>
+                        <div style="display: flex; align-items: center;"><span style="font-size:16px;margin-right:8px">⭐</span><span>Essential</span></div>
                         <span class="filter-count" id="countEssential">0/0</span>
                     </li>
                     <li class="filter-item" onclick="filterByType('recommended')">
-                        <div style="display: flex; align-items: center;">
-                            <span class="filter-icon">💡</span>
-                            <span>Recommended</span>
-                        </div>
+                        <div style="display: flex; align-items: center;"><span style="font-size:16px;margin-right:8px">💡</span><span>Recommended</span></div>
                         <span class="filter-count" id="countRecommended">0/0</span>
                     </li>
                     <li class="filter-item" onclick="filterByType('optional')">
-                        <div style="display: flex; align-items: center;">
-                            <span class="filter-icon">✨</span>
-                            <span>Optional</span>
-                        </div>
+                        <div style="display: flex; align-items: center;"><span style="font-size:16px;margin-right:8px">✨</span><span>Optional</span></div>
                         <span class="filter-count" id="countOptional">0/0</span>
                     </li>
                 </ul>
             </aside>
-
-            <!-- Main Content -->
             <main class="main-content">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -1896,28 +381,19 @@
                         <div class="stat-value" id="phaseStat" style="font-size: 16px;">-</div>
                     </div>
                 </div>
-
                 <div class="category-filter" id="categoryFilter"></div>
-
-                <div class="tasks-container" id="tasksContainer"></div>
+                <div id="tasksContainer"></div>
             </main>
-
-            <!-- Right Panel -->
             <aside class="right-panel">
                 <div class="widget">
                     <div class="widget-title">⏰ Upcoming Deadlines</div>
                     <div id="deadlinesContainer"></div>
                 </div>
-
-                <div class="widget" id="achievementsWidget">
-                    <div class="widget-title">🏆 Achievements</div>
-                    <div id="achievementsContainer"></div>
-                </div>
             </aside>
         </div>
     </div>
 
-    <!-- Calendar Page -->
+    <!-- Calendar -->
     <div id="calendarPage" class="hidden">
         <div class="container" style="grid-template-columns: 1fr; max-width: 1200px;">
             <div class="calendar-container">
@@ -1943,17 +419,6 @@
         </div>
     </div>
 
-    <!-- Task Details Modal -->
-    <div id="taskModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle"></h2>
-                <button class="modal-close" onclick="closeTaskModal()">×</button>
-            </div>
-            <div id="modalDetails"></div>
-        </div>
-    </div>
-
     <!-- Reminder Picker Modal -->
     <div id="reminderPickerModal" class="reminder-picker-modal">
         <div class="reminder-picker-content">
@@ -1966,60 +431,32 @@
         </div>
     </div>
 
-    <!-- Upgrade Modal -->
-    <div id="upgradeModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Upgrade Your Experience</h2>
-                <button class="modal-close" onclick="closeUpgradeModal()">×</button>
-            </div>
-            <div class="plans-grid">
-                <div class="plan-card">
-                    <div class="plan-name">Plus</div>
-                    <div class="plan-price">€8<span style="font-size: 14px;">/mo</span></div>
-                    <ul class="plan-features">
-                        <li>✓ Full timeline</li>
-                        <li>✓ Offline access</li>
-                        <li>✓ Document vault</li>
-                        <li>✓ Priority support</li>
-                    </ul>
-                </div>
-                <div class="plan-card">
-                    <div class="plan-name">Deals+</div>
-                    <div class="plan-price">€15<span style="font-size: 14px;">/mo</span></div>
-                    <ul class="plan-features">
-                        <li>✓ Exclusive deals</li>
-                        <li>✓ Provider compare</li>
-                        <li>✓ Savings tracker</li>
-                    </ul>
-                </div>
-                <div class="plan-card">
-                    <div class="plan-name">Belong</div>
-                    <div class="plan-price">€25<span style="font-size: 14px;">/mo</span></div>
-                    <ul class="plan-features">
-                        <li>✓ Expert consults</li>
-                        <li>✓ Community access</li>
-                        <li>✓ Concierge</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Thank You Modal -->
     <div id="thankYouModal" class="modal">
         <div class="modal-content" style="max-width: 400px; text-align: center;">
             <div style="font-size: 64px; margin-bottom: 16px;">🎉</div>
             <h2 style="margin-bottom: 12px;">Welcome Aboard!</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 24px;">
-                Your personalized checklist is ready! Let's make your move to the Netherlands smooth and stress-free.
-            </p>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">Your personalized checklist is ready!</p>
             <button class="btn-start" onclick="closeThankYouModal()">View My Checklist →</button>
         </div>
     </div>
 
     <script>
-        // State management
+        // ===== FIREBASE CONFIG =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyDSeEyKJ-Kbf-h5GI2QfA7z1K_uzNYOyXc",
+            authDomain: "expatsnl-mvp.firebaseapp.com",
+            projectId: "expatsnl-mvp",
+            storageBucket: "expatsnl-mvp.firebasestorage.app",
+            messagingSenderId: "843022300128",
+            appId: "1:843022300128:web:964f922f2fd0f7f6efb185"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        // ===== STATE =====
         let state = {
             userData: {},
             completedItems: new Set(),
@@ -2034,596 +471,153 @@
             collapsedPhases: new Set()
         };
 
-        // ============================================
-        // PASTE YOUR checklistData OBJECT HERE
-        // ============================================
-        // Checklist data
+        // ===== PASTE YOUR checklistData HERE =====
         const checklistData = {
             arrival: {
                 title: "First Week - Arrival",
                 icon: "✈️",
-                description: "Essential tasks for your first week",
-                items: [
-                    {
-                        task: "Register at gemeente (town hall)",
-                        category: "initial",
-                        type: "mandatory",
-                        description: "Register your address within 5 days of arrival.",
-                        priority: "critical",
-                        deadline: 5,
-                        details: {
-                            where: "Your local gemeente",
-                            what: "Passport, birth certificate, proof of address",
-                            tips: ["Book appointment online ASAP", "Bring originals + copies", "You'll get your BSN here"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get health insurance",
-                        category: "insurance",
-                        type: "mandatory",
-                        description: "Mandatory within 4 months. €120-150/month.",
-                        priority: "critical",
-                        deadline: 120,
-                        details: {
-                            where: "Online or directly from insurers",
-                            what: "BSN, proof of residence, bank account",
-                            tips: ["Use Zorgwijzer.nl to compare", "Basic coverage is mandatory"],
-                            providers: [
-                                { name: "Zilveren Kruis", price: "€129/month", rating: "4.5/5" },
-                                { name: "CZ", price: "€135/month", rating: "4.3/5" }
-                            ]
-                        }
-                    },
-                    {
-                        task: "Open Dutch bank account",
-                        category: "finance",
-                        type: "mandatory",
-                        description: "Required for salary and rent. Requires BSN.",
-                        priority: "critical",
-                        deadline: 14,
-                        details: {
-                            where: "Bank branches or online",
-                            what: "BSN, passport, proof of address",
-                            tips: ["ING, ABN AMRO popular", "Card takes 5-7 days"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get a Dutch phone number",
-                        category: "utilities",
-                        type: "essential",
-                        description: "Essential for banking and daily life.",
-                        priority: "important",
-                        deadline: 7,
-                        details: {
-                            where: "Provider stores or supermarkets",
-                            what: "Passport/ID",
-                            tips: ["Prepaid SIM at Albert Heijn", "KPN, Vodafone, Lebara"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get internet service",
-                        category: "utilities",
-                        type: "essential",
-                        description: "Installation takes 1-2 weeks.",
-                        priority: "important",
-                        deadline: 14,
-                        details: {
-                            where: "Online or provider stores",
-                            what: "Address, bank account",
-                            tips: ["Check fiber availability", "Bundle deals save money"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get a bike",
-                        category: "transport",
-                        type: "essential",
-                        description: "Essential for Dutch life. €150-300.",
-                        priority: "important",
-                        deadline: 30,
-                        details: {
-                            where: "Bike shops, Marktplaats, Swapfiets",
-                            what: "Money, quality lock",
-                            tips: ["Buy €50+ lock", "Register with police"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Find permanent housing",
-                        category: "housing",
-                        type: "essential",
-                        description: "Market is competitive.",
-                        priority: "critical",
-                        deadline: 60,
-                        details: {
-                            where: "Pararius.nl, Funda.nl",
-                            what: "Income proof, ID, contract",
-                            tips: ["Budget 30-40% of income", "Beware scams"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Notify employer of BSN",
-                        category: "employment",
-                        type: "mandatory",
-                        description: "Required for salary processing.",
-                        priority: "critical",
-                        deadline: 14,
-                        details: {
-                            where: "HR department",
-                            what: "BSN number",
-                            tips: ["Do this immediately after receiving BSN"],
-                            providers: []
-                        }
-                    }
-                ]
-            },
-            settling: {
-                title: "Month 1 - Settling In",
-                icon: "🏡",
-                description: "Get your daily life organized",
-                items: [
-                    {
-                        task: "Apply for 30% ruling",
-                        category: "taxes",
-                        type: "recommended",
-                        description: "Tax benefit for skilled migrants.",
-                        priority: "important",
-                        deadline: 120,
-                        details: {
-                            where: "Through employer or tax advisor",
-                            what: "Contract, proof of residence abroad",
-                            tips: ["Reduces taxable income by 30%", "Valid 5 years"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get OV-chipkaart",
-                        category: "transport",
-                        type: "essential",
-                        description: "Required for public transport.",
-                        priority: "important",
-                        deadline: 30,
-                        details: {
-                            where: "Stations, online, Albert Heijn",
-                            what: "Photo, bank account",
-                            tips: ["Anonymous: €7.50", "Always check in AND out"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Register with GP",
-                        category: "healthcare",
-                        type: "essential",
-                        description: "Choose local doctor.",
-                        priority: "important",
-                        deadline: 30,
-                        details: {
-                            where: "Local GP practices",
-                            what: "BSN, insurance, address",
-                            tips: ["Find within cycling distance", "GP first before hospital"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Setup electricity & gas",
-                        category: "utilities",
-                        type: "essential",
-                        description: "Transfer to your name.",
-                        priority: "important",
-                        deadline: 14,
-                        details: {
-                            where: "Energy provider websites",
-                            what: "Address, bank, meter readings",
-                            tips: ["Compare on Gaslicht.com", "Photo meter readings"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get water supply account",
-                        category: "utilities",
-                        type: "essential",
-                        description: "Regional water company.",
-                        priority: "important",
-                        deadline: 30,
-                        details: {
-                            where: "Regional water company",
-                            what: "Address, bank account",
-                            tips: ["€50-70/month average", "Regional monopolies"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Setup municipal taxes",
-                        category: "taxes",
-                        type: "mandatory",
-                        description: "Local taxes registration.",
-                        priority: "important",
-                        deadline: 60,
-                        details: {
-                            where: "Automatic by gemeente",
-                            what: "None - automatic",
-                            tips: ["€300-500/year", "Billed quarterly"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get renters insurance",
-                        category: "insurance",
-                        type: "essential",
-                        description: "Protects belongings and liability.",
-                        priority: "important",
-                        deadline: 30,
-                        details: {
-                            where: "Insurance companies",
-                            what: "Address, value estimate",
-                            tips: ["€5-15/month", "Often required by landlords"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Register for DigiD",
-                        category: "legal",
-                        type: "mandatory",
-                        description: "Digital ID for government.",
-                        priority: "critical",
-                        deadline: 30,
-                        details: {
-                            where: "DigiD.nl",
-                            what: "BSN, email/phone",
-                            tips: ["Letter in 5-10 days", "Enable 2FA"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get driver's license",
-                        category: "legal",
-                        type: "optional",
-                        description: "Exchange or take test.",
-                        priority: "optional",
-                        deadline: 180,
-                        details: {
-                            where: "CBR and gemeente",
-                            what: "Foreign license, BSN",
-                            tips: ["EU can exchange", "Theory in English"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Setup waste separation",
-                        category: "housing",
-                        type: "recommended",
-                        description: "Learn recycling rules.",
-                        priority: "important",
-                        deadline: 14,
-                        details: {
-                            where: "Municipality website",
-                            what: "Address",
-                            tips: ["Download waste app", "Bottle deposits"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Find a dentist",
-                        category: "healthcare",
-                        type: "optional",
-                        description: "Not covered by basic insurance.",
-                        priority: "optional",
-                        deadline: 90,
-                        details: {
-                            where: "Local practices",
-                            what: "ID, payment",
-                            tips: ["Checkup: €50-100", "Consider insurance"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get library card",
-                        category: "integration",
-                        type: "optional",
-                        description: "Free access to books and events.",
-                        priority: "optional",
-                        deadline: 60,
-                        details: {
-                            where: "Public library",
-                            what: "ID, €15-30 annual",
-                            tips: ["English books", "Free wifi"],
-                            providers: []
-                        }
-                    }
-                ]
-            },
-            integration: {
-                title: "Month 2-3 - Integration",
-                icon: "🤝",
-                description: "Integrate into Dutch society",
-                items: [
-                    {
-                        task: "Start Dutch language course",
-                        category: "education",
-                        type: "optional",
-                        description: "Important for integration.",
-                        priority: "important",
-                        deadline: 90,
-                        details: {
-                            where: "Language schools",
-                            what: "Registration, payment",
-                            tips: ["Check employer courses", "DUO loans available"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Enroll children in school",
-                        category: "education",
-                        type: "mandatory",
-                        description: "Mandatory ages 5-16.",
-                        priority: "critical",
-                        deadline: 30,
-                        details: {
-                            where: "Local schools",
-                            what: "Birth cert, BSN, records",
-                            tips: ["Public free", "International €10k-25k/year"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Register for childcare",
-                        category: "childcare",
-                        type: "recommended",
-                        description: "Subsidized for working parents.",
-                        priority: "important",
-                        deadline: 60,
-                        details: {
-                            where: "Daycare centers",
-                            what: "BSN, employment details",
-                            tips: ["Long waiting lists", "€6-9/hour before subsidy"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Apply for child benefits",
-                        category: "finance",
-                        type: "recommended",
-                        description: "Support for children under 18.",
-                        priority: "important",
-                        deadline: 90,
-                        details: {
-                            where: "SVB",
-                            what: "BSN, children's details",
-                            tips: ["€250-300 per quarter", "Auto after registration"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Join local groups",
-                        category: "integration",
-                        type: "optional",
-                        description: "Build your network.",
-                        priority: "optional",
-                        deadline: 90,
-                        details: {
-                            where: "Meetup, Facebook, clubs",
-                            what: "Interest, time",
-                            tips: ["Internations for expats", "Sports clubs"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get pension overview",
-                        category: "finance",
-                        type: "optional",
-                        description: "Understand your pension.",
-                        priority: "optional",
-                        deadline: 180,
-                        details: {
-                            where: "mijnpensioenoverzicht.nl",
-                            what: "DigiD login",
-                            tips: ["Three pillars", "Review annually"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Setup mail forwarding",
-                        category: "initial",
-                        type: "recommended",
-                        description: "Forward from previous address.",
-                        priority: "optional",
-                        deadline: 30,
-                        details: {
-                            where: "Post office",
-                            what: "Addresses",
-                            tips: ["6-12 months", "Notify institutions"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Register at embassy",
-                        category: "legal",
-                        type: "optional",
-                        description: "Register with home embassy.",
-                        priority: "optional",
-                        deadline: 90,
-                        details: {
-                            where: "Embassy in The Hague",
-                            what: "Passport, residence proof",
-                            tips: ["Helps in emergencies", "Passport renewals"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Understand healthcare system",
-                        category: "healthcare",
-                        type: "essential",
-                        description: "Learn how to access care.",
-                        priority: "important",
-                        deadline: 30,
-                        details: {
-                            where: "Insurer info",
-                            what: "Insurance card, GP contact",
-                            tips: ["GP first always", "Emergency: 112"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Get liability insurance",
-                        category: "insurance",
-                        type: "recommended",
-                        description: "Personal liability coverage.",
-                        priority: "important",
-                        deadline: 30,
-                        details: {
-                            where: "Insurance companies",
-                            what: "Personal details",
-                            tips: ["€3-8/month", "Very important in NL"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "File first tax return",
-                        category: "taxes",
-                        type: "mandatory",
-                        description: "Annual tax return.",
-                        priority: "critical",
-                        deadline: 365,
-                        details: {
-                            where: "Belastingdienst.nl",
-                            what: "Income statements",
-                            tips: ["Deadline: May 1st", "Keep expense records"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Apply for housing allowance",
-                        category: "finance",
-                        type: "recommended",
-                        description: "Rent subsidy.",
-                        priority: "important",
-                        deadline: 90,
-                        details: {
-                            where: "Toeslagen.nl",
-                            what: "Income, rent amount",
-                            tips: ["If rent < €880/month", "Up to €400/month"],
-                            providers: []
-                        }
-                    },
-                    {
-                        task: "Apply for healthcare allowance",
-                        category: "finance",
-                        type: "recommended",
-                        description: "Insurance cost subsidy.",
-                        priority: "important",
-                        deadline: 90,
-                        details: {
-                            where: "Toeslagen.nl",
-                            what: "Income, insurance info",
-                            tips: ["Based on income/assets", "Up to €150/month"],
-                            providers: []
-                        }
-                    }
-                ]
+                description: "Essential tasks",
+                items: []
             }
         };
 
+        // ===== FIREBASE AUTH =====
+        function signInWithGoogle() {
+            const btn = document.getElementById('googleSignInBtn');
+            const btnText = document.getElementById('googleBtnText');
+            btnText.innerHTML = '<div class="loading-spinner"></div> Signing in...';
+            btn.disabled = true;
+            
+            const provider = new firebase.auth.GoogleAuthProvider();
+            auth.signInWithPopup(provider)
+                .then(result => {
+                    console.log('✓ Signed in:', result.user.email);
+                    loadUserDataFromCloud(result.user.uid);
+                })
+                .catch(error => {
+                    alert('Sign in failed: ' + error.message);
+                    btnText.textContent = 'Continue with Google';
+                    btn.disabled = false;
+                });
+        }
 
-        // ============================================
-        // END OF checklistData
-        // ============================================
+        function signOut() {
+            if (!confirm('Sign out?')) return;
+            auth.signOut().then(() => {
+                state = {
+                    userData: {}, completedItems: new Set(), reminders: {},
+                    currentFilter: 'all', currentPhase: 'arrival', currentTypeFilter: 'all',
+                    currentPage: 'landing', currentMonth: new Date().getMonth(),
+                    currentYear: new Date().getFullYear(), currentReminderTask: null, collapsedPhases: new Set()
+                };
+                localStorage.removeItem('expatsnl');
+                document.getElementById('appNav').classList.add('hidden');
+                document.getElementById('dashboardPage').classList.add('hidden');
+                document.getElementById('landingPage').classList.remove('hidden');
+            });
+        }
 
+        function loadUserDataFromCloud(userId) {
+            db.collection('users').doc(userId).get()
+                .then(doc => {
+                    if (doc.exists) {
+                        const data = doc.data();
+                        state.userData = data.userData || {};
+                        state.completedItems = new Set(data.completedItems || []);
+                        state.reminders = data.reminders || {};
+                        state.currentFilter = data.currentFilter || 'all';
+                        state.currentPhase = data.currentPhase || 'arrival';
+                        state.currentTypeFilter = data.currentTypeFilter || 'all';
+                        state.collapsedPhases = new Set(data.collapsedPhases || []);
+                        document.getElementById('landingPage').classList.add('hidden');
+                        document.getElementById('onboardingScreen').classList.add('hidden');
+                        showApp();
+                    } else {
+                        document.getElementById('landingPage').classList.add('hidden');
+                        document.getElementById('onboardingScreen').classList.remove('hidden');
+                    }
+                })
+                .catch(error => alert('Error loading data: ' + error.message));
+        }
+
+        function saveUserDataToCloud(userId) {
+            if (!userId) return;
+            const dataToSave = {
+                userData: state.userData,
+                completedItems: Array.from(state.completedItems),
+                reminders: state.reminders,
+                currentFilter: state.currentFilter,
+                currentPhase: state.currentPhase,
+                currentTypeFilter: state.currentTypeFilter,
+                collapsedPhases: Array.from(state.collapsedPhases),
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            db.collection('users').doc(userId).set(dataToSave).catch(error => console.error('Save error:', error));
+        }
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                state.userData.email = user.email;
+                state.userData.name = user.displayName || state.userData.name;
+                if (user.displayName) {
+                    const initials = user.displayName.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                    const avatarEl = document.getElementById('userAvatar');
+                    if (avatarEl) avatarEl.textContent = initials;
+                }
+            }
+        });
+
+        // ===== APP FUNCTIONS =====
         function init() {
             loadTheme();
             loadState();
-            
-            // Check if user has completed onboarding
-            if (state.userData && state.userData.name && state.userData.arrivalDate) {
+            if (state.userData && state.userData.name && state.userData.arrivalDate && !auth.currentUser) {
                 showApp();
             }
         }
 
-function handleEmailCapture(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    
-    const form = event.target;
-    const email = form.querySelector('input[type="email"]').value;
-    
-    if (!email) {
-        alert('Please enter your email');
-        return false;
-    }
-    
-    // Store email
-    state.userData.email = email;
-    
-    // Submit to Netlify in background
-    const formData = new FormData(form);
-    fetch('/', {
-        method: 'POST',
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData).toString()
-    }).catch((error) => {
-        console.log('Form submission:', error);
-    });
-    
-    // Immediately show onboarding (don't wait for fetch)
-    document.getElementById('landingPage').classList.add('hidden');
-    document.getElementById('onboardingScreen').classList.remove('hidden');
-    document.getElementById('onboardingEmail').value = email;
-    
-    return false;
-}
-        function handleOnboarding(event) {
+        function handleEmailCapture(event) {
             event.preventDefault();
-            
-            const form = event.target;
-            const formData = new FormData(form);
-            
-            const name = document.getElementById('userName').value;
-            const arrivalDate = document.getElementById('arrivalDate').value;
-            const movingReason = document.getElementById('movingReason').value;
-            const city = document.getElementById('city').value;
-            
-            if (!name || !arrivalDate) {
-                alert('Please fill in name and arrival date');
-                return false;
-            }
-            
-            // Submit to Netlify
+            const email = event.target.querySelector('input[type="email"]').value;
+            if (!email) return false;
+            state.userData.email = email;
+            const formData = new FormData(event.target);
             fetch('/', {
                 method: 'POST',
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: new URLSearchParams(formData).toString()
-            })
-            .then(() => {
-                // Save to state
-                state.userData = {
-                    ...state.userData,
-                    name,
-                    arrivalDate,
-                    movingReason,
-                    city
-                };
-                saveState();
-                
-                // Show thank you modal
-                document.getElementById('thankYouModal').classList.add('active');
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-                // Still save and proceed
-                state.userData = {
-                    ...state.userData,
-                    name,
-                    arrivalDate,
-                    movingReason,
-                    city
-                };
-                saveState();
-                document.getElementById('thankYouModal').classList.add('active');
-            });
+            }).catch(() => {});
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('onboardingScreen').classList.remove('hidden');
+            document.getElementById('onboardingEmail').value = email;
+            return false;
+        }
+
+        function handleOnboarding(event) {
+            event.preventDefault();
+            const name = document.getElementById('userName').value;
+            const arrivalDate = document.getElementById('arrivalDate').value;
+            if (!name || !arrivalDate) return alert('Please fill required fields'), false;
             
+            state.userData = {
+                ...state.userData,
+                name, arrivalDate,
+                movingReason: document.getElementById('movingReason').value,
+                city: document.getElementById('city').value
+            };
+            saveState();
+            
+            const user = auth.currentUser;
+            if (user) saveUserDataToCloud(user.uid);
+            
+            const formData = new FormData(event.target);
+            fetch('/', {
+                method: 'POST',
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            }).catch(() => {});
+            
+            document.getElementById('thankYouModal').classList.add('active');
             return false;
         }
 
@@ -2636,13 +630,10 @@ function handleEmailCapture(event) {
         function showApp() {
             document.getElementById('appNav').classList.remove('hidden');
             document.getElementById('dashboardPage').classList.remove('hidden');
-            
-            // Set user avatar
             if (state.userData.name) {
                 const initials = state.userData.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
                 document.getElementById('userAvatar').textContent = initials;
             }
-            
             renderDashboard();
         }
 
@@ -2652,60 +643,29 @@ function handleEmailCapture(event) {
             renderMilestones();
             renderTasks();
             renderDeadlines();
-            renderAchievements();
             updateTypeCounts();
         }
 
         function renderCategoryFilter() {
             const container = document.getElementById('categoryFilter');
             if (!container) return;
-
             const categories = new Set();
             Object.values(checklistData).forEach(phase => {
-                phase.items.forEach(item => {
-                    if (item.category) {
-                        categories.add(item.category);
-                    }
-                });
+                phase.items.forEach(item => { if (item.category) categories.add(item.category); });
             });
-
-            const sortedCategories = Array.from(categories).sort();
-
             const categoryIcons = {
-                all: '📋', initial: '✈️', housing: '🏠', insurance: '🛡️',
-                finance: '💰', taxes: '📊', education: '📚', childcare: '👶',
-                transport: '🚲', utilities: '💡', legal: '⚖️', employment: '💼',
-                work: '💼', integration: '🤝', healthcare: '🏥'
+                all: '📋', initial: '✈️', housing: '🏠', insurance: '🛡️', finance: '💰', 
+                taxes: '📊', education: '📚', childcare: '👶', transport: '🚲', utilities: '💡',
+                legal: '⚖️', employment: '💼', work: '💼', integration: '🤝', healthcare: '🏥'
             };
-
-            const categoryNames = {
-                initial: 'Initial', housing: 'Housing', insurance: 'Insurance',
-                finance: 'Finance', taxes: 'Taxes', education: 'Education',
-                childcare: 'Childcare', transport: 'Transport', utilities: 'Utilities',
-                legal: 'Legal', employment: 'Work', work: 'Work',
-                integration: 'Integration', healthcare: 'Healthcare'
-            };
-
-            let html = `
-                <div class="category-icon ${state.currentFilter === 'all' ? 'active' : ''}" data-category="all" onclick="filterByCategory('all')">
-                    <div class="category-icon-emoji">📋</div>
-                    <div class="category-icon-text">All</div>
-                </div>
-            `;
-
-            sortedCategories.forEach(category => {
-                const icon = categoryIcons[category] || '📋';
-                const name = categoryNames[category] || category.charAt(0).toUpperCase() + category.slice(1);
-                const isActive = state.currentFilter === category;
-
-                html += `
-                    <div class="category-icon ${isActive ? 'active' : ''}" data-category="${category}" onclick="filterByCategory('${category}')">
-                        <div class="category-icon-emoji">${icon}</div>
-                        <div class="category-icon-text">${name}</div>
-                    </div>
-                `;
+            let html = `<div class="category-icon ${state.currentFilter === 'all' ? 'active' : ''}" data-category="all" onclick="filterByCategory('all')">
+                <div class="category-icon-emoji">📋</div><div class="category-icon-text">All</div></div>`;
+            Array.from(categories).sort().forEach(cat => {
+                const icon = categoryIcons[cat] || '📋';
+                const name = cat.charAt(0).toUpperCase() + cat.slice(1);
+                html += `<div class="category-icon ${state.currentFilter === cat ? 'active' : ''}" data-category="${cat}" onclick="filterByCategory('${cat}')">
+                    <div class="category-icon-emoji">${icon}</div><div class="category-icon-text">${name}</div></div>`;
             });
-
             container.innerHTML = html;
         }
 
@@ -2713,22 +673,15 @@ function handleEmailCapture(event) {
             const totalItems = getTotalTasks();
             const completedCount = state.completedItems.size;
             const percentage = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
-
             document.getElementById('completedStat').textContent = `${completedCount}/${totalItems}`;
             document.getElementById('progressStat').textContent = `${percentage}%`;
             document.getElementById('progressPercent').textContent = `${percentage}%`;
-
             const circumference = 2 * Math.PI * 45;
-            const offset = circumference - (percentage / 100) * circumference;
-            document.getElementById('progressCircle').style.strokeDashoffset = offset;
-
+            document.getElementById('progressCircle').style.strokeDashoffset = circumference - (percentage / 100) * circumference;
             if (state.userData.arrivalDate) {
-                const arrivalDate = new Date(state.userData.arrivalDate);
-                const today = new Date();
-                const daysSince = Math.floor((today - arrivalDate) / (1000 * 60 * 60 * 24));
+                const daysSince = Math.floor((new Date() - new Date(state.userData.arrivalDate)) / (1000 * 60 * 60 * 24));
                 document.getElementById('daysStat').textContent = daysSince >= 0 ? daysSince : 0;
             }
-
             const currentPhaseData = checklistData[state.currentPhase];
             if (currentPhaseData) {
                 document.getElementById('phaseStat').textContent = currentPhaseData.icon + ' ' + currentPhaseData.title.split(' - ')[0];
@@ -2738,37 +691,20 @@ function handleEmailCapture(event) {
         function renderMilestones() {
             const container = document.getElementById('milestoneList');
             container.innerHTML = '';
-
             Object.keys(checklistData).forEach(phaseKey => {
                 const phase = checklistData[phaseKey];
-                
-                let completed = 0;
-                let total = phase.items.length;
-                
+                let completed = 0, total = phase.items.length;
                 phase.items.forEach((item, index) => {
-                    const itemId = `${phaseKey}-${index}`;
-                    if (state.completedItems.has(itemId)) {
-                        completed++;
-                    }
+                    if (state.completedItems.has(`${phaseKey}-${index}`)) completed++;
                 });
-                
                 const li = document.createElement('li');
-                li.className = 'milestone-item';
-                if (phaseKey === state.currentPhase) {
-                    li.classList.add('active');
-                }
-                li.onclick = () => {
-                    state.currentPhase = phaseKey;
-                    saveState();
-                    renderDashboard();
-                };
-                li.innerHTML = `
-                    <span class="milestone-icon">${phase.icon}</span>
-                    <div style="flex: 1; min-width: 0;">
+                li.className = 'milestone-item' + (phaseKey === state.currentPhase ? ' active' : '');
+                li.onclick = () => { state.currentPhase = phaseKey; saveState(); renderDashboard(); };
+                li.innerHTML = `<span style="font-size:18px">${phase.icon}</span>
+                    <div style="flex:1;min-width:0;">
                         <div>${phase.title.split(' - ')[1] || phase.title}</div>
-                        <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">${completed}/${total}</div>
-                    </div>
-                `;
+                        <div style="font-size:10px;color:var(--text-tertiary);margin-top:2px">${completed}/${total}</div>
+                    </div>`;
                 container.appendChild(li);
             });
         }
@@ -2776,126 +712,78 @@ function handleEmailCapture(event) {
         function renderTasks() {
             const container = document.getElementById('tasksContainer');
             container.innerHTML = '';
-
             Object.keys(checklistData).forEach(phaseKey => {
                 const phase = checklistData[phaseKey];
-                const phaseSection = document.createElement('div');
-                phaseSection.className = 'phase-section';
-                if (state.collapsedPhases.has(phaseKey)) {
-                    phaseSection.classList.add('collapsed');
-                }
-
                 const filteredItems = phase.items.filter(item => {
                     const categoryMatch = state.currentFilter === 'all' || item.category === state.currentFilter;
                     const typeMatch = state.currentTypeFilter === 'all' || item.type === state.currentTypeFilter;
                     return categoryMatch && typeMatch;
                 });
-
                 if (filteredItems.length === 0) return;
-
                 const completedInPhase = filteredItems.filter((item, index) => 
                     state.completedItems.has(`${phaseKey}-${phase.items.indexOf(item)}`)
                 ).length;
-
-                phaseSection.innerHTML = `
-                    <div class="phase-header" onclick="togglePhase('${phaseKey}')">
-                        <div class="phase-title">
-                            <span class="phase-icon">${phase.icon}</span>
-                            <div class="phase-title-text">
-                                <h2>${phase.title}</h2>
-                                <p>${phase.description}</p>
-                            </div>
-                        </div>
-                        <div class="phase-meta">
-                            <span class="phase-progress">${completedInPhase}/${filteredItems.length}</span>
-                            <span class="collapse-icon">▼</span>
-                        </div>
+                const phaseSection = document.createElement('div');
+                phaseSection.className = 'phase-section' + (state.collapsedPhases.has(phaseKey) ? ' collapsed' : '');
+                phaseSection.innerHTML = `<div class="phase-header" onclick="togglePhase('${phaseKey}')">
+                    <div class="phase-title">
+                        <span class="phase-icon">${phase.icon}</span>
+                        <div class="phase-title-text"><h2>${phase.title}</h2><p>${phase.description}</p></div>
                     </div>
-                    <div class="phase-content">
-                        <ul class="task-list" id="taskList-${phaseKey}"></ul>
+                    <div class="phase-meta">
+                        <span class="phase-progress">${completedInPhase}/${filteredItems.length}</span>
+                        <span class="collapse-icon">▼</span>
                     </div>
-                `;
-
+                </div>
+                <div class="phase-content"><ul class="task-list" id="taskList-${phaseKey}"></ul></div>`;
                 container.appendChild(phaseSection);
-
                 const taskList = document.getElementById(`taskList-${phaseKey}`);
-                filteredItems.forEach((item, displayIndex) => {
+                filteredItems.forEach(item => {
                     const actualIndex = phase.items.indexOf(item);
                     const itemId = `${phaseKey}-${actualIndex}`;
                     const isCompleted = state.completedItems.has(itemId);
                     const reminder = state.reminders[itemId];
-
                     const li = document.createElement('li');
-                    li.className = 'task-item';
-                    if (isCompleted) li.classList.add('completed');
-
-                    let reminderHTML = '';
-                    if (reminder) {
-                        const reminderDate = new Date(reminder);
-                        reminderHTML = `<span class="task-reminder">🔔 ${reminderDate.toLocaleDateString()}</span>`;
-                    }
-
-                    li.innerHTML = `
-                        <div class="task-checkbox-wrapper">
-                            <div class="task-checkbox ${isCompleted ? 'checked' : ''}" onclick="toggleTask('${itemId}')" data-task-id="${itemId}"></div>
-                        </div>
+                    li.className = 'task-item' + (isCompleted ? ' completed' : '');
+                    let reminderHTML = reminder ? `<span class="task-reminder">🔔 ${new Date(reminder).toLocaleDateString()}</span>` : '';
+                    li.innerHTML = `<div><div class="task-checkbox ${isCompleted ? 'checked' : ''}" onclick="toggleTask('${itemId}')" data-task-id="${itemId}"></div></div>
                         <div class="task-content">
-                            <div class="task-title" onclick="showTaskDetails('${phaseKey}', ${actualIndex})">${item.task}</div>
+                            <div class="task-title">${item.task}</div>
                             <div class="task-meta">
                                 <span class="task-badge ${item.type}">${item.type}</span>
-                                ${item.deadline ? `<span class="task-deadline">📅 ${item.deadline} days</span>` : ''}
+                                ${item.deadline ? `<span style="font-size:12px;color:var(--text-tertiary)">📅 ${item.deadline} days</span>` : ''}
                                 ${reminderHTML}
                             </div>
                         </div>
                         <div class="task-actions">
-                            <button class="task-action-btn ${isCompleted ? 'done' : ''}" onclick="toggleTask('${itemId}')">
-                                ${isCompleted ? '✓ Done' : '✓ Mark Done'}
-                            </button>
-                            <button class="task-action-btn" onclick="openReminderPicker('${itemId}')">
-                                🔔 Reminder
-                            </button>
-                        </div>
-                    `;
+                            <button class="task-action-btn ${isCompleted ? 'done' : ''}" onclick="toggleTask('${itemId}')">${isCompleted ? '✓ Done' : '✓ Mark Done'}</button>
+                            <button class="task-action-btn" onclick="openReminderPicker('${itemId}')">🔔 Reminder</button>
+                        </div>`;
                     taskList.appendChild(li);
                 });
             });
         }
 
         function togglePhase(phaseKey) {
-            if (state.collapsedPhases.has(phaseKey)) {
-                state.collapsedPhases.delete(phaseKey);
-            } else {
-                state.collapsedPhases.add(phaseKey);
-            }
+            if (state.collapsedPhases.has(phaseKey)) state.collapsedPhases.delete(phaseKey);
+            else state.collapsedPhases.add(phaseKey);
             saveState();
             renderTasks();
         }
 
         function updateTypeCounts() {
-            const counts = {
-                all: 0,
-                mandatory: { total: 0, completed: 0 },
-                essential: { total: 0, completed: 0 },
-                recommended: { total: 0, completed: 0 },
-                optional: { total: 0, completed: 0 }
-            };
-
+            const counts = { all: 0, mandatory: {total: 0, completed: 0}, essential: {total: 0, completed: 0}, recommended: {total: 0, completed: 0}, optional: {total: 0, completed: 0} };
             Object.keys(checklistData).forEach(phaseKey => {
-                const phase = checklistData[phaseKey];
-                phase.items.forEach((item, index) => {
+                checklistData[phaseKey].items.forEach((item, index) => {
                     const itemId = `${phaseKey}-${index}`;
                     const isCompleted = state.completedItems.has(itemId);
-                    
                     counts.all++;
                     if (counts[item.type]) {
                         counts[item.type].total++;
-                        if (isCompleted) {
-                            counts[item.type].completed++;
-                        }
+                        if (isCompleted) counts[item.type].completed++;
                     }
                 });
             });
-
             document.getElementById('countAll').textContent = counts.all;
             document.getElementById('countMandatory').textContent = `${counts.mandatory.completed}/${counts.mandatory.total}`;
             document.getElementById('countEssential').textContent = `${counts.essential.completed}/${counts.essential.total}`;
@@ -2905,117 +793,28 @@ function handleEmailCapture(event) {
 
         function filterByType(type) {
             state.currentTypeFilter = type;
-            
-            document.querySelectorAll('.filter-item').forEach(item => {
-                item.classList.remove('active');
-            });
+            document.querySelectorAll('.filter-item').forEach(item => item.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            
             saveState();
             renderTasks();
         }
 
         function filterByCategory(category) {
             state.currentFilter = category;
-            
-            document.querySelectorAll('.category-icon').forEach(icon => {
-                icon.classList.remove('active');
-                if (icon.dataset.category === category) {
-                    icon.classList.add('active');
-                }
-            });
-            
+            renderCategoryFilter();
             renderTasks();
         }
 
-        function showTaskDetails(phaseKey, itemIndex) {
-            const phase = checklistData[phaseKey];
-            const item = phase.items[itemIndex];
-            
-            document.getElementById('modalTitle').textContent = item.task;
-            
-            let detailsHTML = '';
-            
-            if (item.description) {
-                detailsHTML += `
-                    <div class="modal-section">
-                        <h3>📝 Description</h3>
-                        <p>${item.description}</p>
-                    </div>
-                `;
-            }
-            
-            if (item.details) {
-                if (item.details.where) {
-                    detailsHTML += `
-                        <div class="modal-section">
-                            <h3>📍 Where</h3>
-                            <p>${item.details.where}</p>
-                        </div>
-                    `;
-                }
-                
-                if (item.details.what) {
-                    detailsHTML += `
-                        <div class="modal-section">
-                            <h3>📋 What You Need</h3>
-                            <p>${item.details.what}</p>
-                        </div>
-                    `;
-                }
-                
-                if (item.details.tips && item.details.tips.length > 0) {
-                    detailsHTML += `
-                        <div class="modal-section">
-                            <h3>💡 Tips</h3>
-                            <ul>
-                                ${item.details.tips.map(tip => `<li>${tip}</li>`).join('')}
-                            </ul>
-                        </div>
-                    `;
-                }
-                
-                if (item.details.providers && item.details.providers.length > 0) {
-                    detailsHTML += `
-                        <div class="modal-section">
-                            <h3>🏢 Providers</h3>
-                            ${item.details.providers.map(p => `
-                                <div class="provider-card">
-                                    <div class="provider-name">${p.name}</div>
-                                    <div class="provider-details">${p.price} • ${p.rating}</div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-            }
-            
-            document.getElementById('modalDetails').innerHTML = detailsHTML;
-            document.getElementById('taskModal').classList.add('active');
-        }
-
-        function closeTaskModal() {
-            document.getElementById('taskModal').classList.remove('active');
-        }
-
         function toggleTask(itemId) {
-            if (state.completedItems.has(itemId)) {
-                state.completedItems.delete(itemId);
-            } else {
-                state.completedItems.add(itemId);
-            }
+            if (state.completedItems.has(itemId)) state.completedItems.delete(itemId);
+            else state.completedItems.add(itemId);
             saveState();
             renderDashboard();
         }
 
         function openReminderPicker(itemId) {
             state.currentReminderTask = itemId;
-            const existingReminder = state.reminders[itemId];
-            if (existingReminder) {
-                document.getElementById('reminderDateInput').value = existingReminder;
-            } else {
-                document.getElementById('reminderDateInput').value = '';
-            }
+            document.getElementById('reminderDateInput').value = state.reminders[itemId] || '';
             document.getElementById('reminderPickerModal').classList.add('active');
         }
 
@@ -3026,20 +825,13 @@ function handleEmailCapture(event) {
 
         function setReminder() {
             const date = document.getElementById('reminderDateInput').value;
-            if (!date) {
-                alert('Please select a date');
-                return;
-            }
-            
+            if (!date) return alert('Please select a date');
             if (state.currentReminderTask) {
                 state.reminders[state.currentReminderTask] = date;
                 saveState();
                 renderDashboard();
-                if (state.currentPage === 'calendar') {
-                    renderCalendar();
-                }
+                if (state.currentPage === 'calendar') renderCalendar();
             }
-            
             closeReminderPicker();
         }
 
@@ -3049,14 +841,11 @@ function handleEmailCapture(event) {
                 container.innerHTML = '<p style="color: var(--text-tertiary); font-size: 13px;">Set arrival date</p>';
                 return;
             }
-
             const arrivalDate = new Date(state.userData.arrivalDate);
             const today = new Date();
             let deadlines = [];
-
             Object.keys(checklistData).forEach(phaseKey => {
-                const phase = checklistData[phaseKey];
-                phase.items.forEach((item, index) => {
+                checklistData[phaseKey].items.forEach((item, index) => {
                     if (item.deadline) {
                         const itemId = `${phaseKey}-${index}`;
                         if (!state.completedItems.has(itemId)) {
@@ -3067,74 +856,27 @@ function handleEmailCapture(event) {
                     }
                 });
             });
-
             deadlines.sort((a, b) => a.daysRemaining - b.daysRemaining);
             deadlines = deadlines.slice(0, 3);
-
             if (deadlines.length === 0) {
                 container.innerHTML = '<p style="color: var(--text-tertiary); font-size: 13px;">No urgent deadlines 🎉</p>';
                 return;
             }
-
-            container.innerHTML = deadlines.map(d => `
-                <div class="deadline-item">
-                    <div class="deadline-days">${Math.abs(d.daysRemaining)} days</div>
-                    <div class="deadline-text">${d.daysRemaining < 0 ? 'Overdue: ' : ''}${d.task}</div>
-                </div>
-            `).join('');
-        }
-
-        function renderAchievements() {
-            const container = document.getElementById('achievementsContainer');
-            const completedCount = state.completedItems.size;
-            const totalItems = getTotalTasks();
-            const percentage = totalItems > 0 ? Math.round((completedCount / totalItems) * 100) : 0;
-
-            let achievements = [];
-
-            if (completedCount >= 1) {
-                achievements.push({ icon: '🎯', name: 'Getting Started', desc: 'First task done' });
-            }
-            if (percentage >= 25) {
-                achievements.push({ icon: '🚀', name: 'Quarter Way', desc: '25% complete' });
-            }
-            if (percentage >= 50) {
-                achievements.push({ icon: '⭐', name: 'Halfway', desc: '50% complete' });
-            }
-
-            if (achievements.length === 0) {
-                document.getElementById('achievementsWidget').style.display = 'none';
-                return;
-            }
-
-            document.getElementById('achievementsWidget').style.display = 'block';
-            container.innerHTML = achievements.map(a => `
-                <div class="achievement-item">
-                    <div class="achievement-icon">${a.icon}</div>
-                    <div>
-                        <div class="achievement-name">${a.name}</div>
-                        <div class="achievement-desc">${a.desc}</div>
-                    </div>
-                </div>
-            `).join('');
+            container.innerHTML = deadlines.map(d => `<div class="deadline-item">
+                <div class="deadline-days">${Math.abs(d.daysRemaining)} days</div>
+                <div class="deadline-text">${d.daysRemaining < 0 ? 'Overdue: ' : ''}${d.task}</div>
+            </div>`).join('');
         }
 
         function getTotalTasks() {
             let total = 0;
-            Object.values(checklistData).forEach(phase => {
-                total += phase.items.length;
-            });
+            Object.values(checklistData).forEach(phase => { total += phase.items.length; });
             return total;
         }
 
-        // Calendar functions
         function showPage(page) {
             state.currentPage = page;
-            
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.classList.remove('active');
-            });
-            
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
             if (page === 'dashboard') {
                 document.getElementById('navDashboard').classList.add('active');
                 document.getElementById('dashboardPage').classList.remove('hidden');
@@ -3145,79 +887,51 @@ function handleEmailCapture(event) {
                 document.getElementById('calendarPage').classList.remove('hidden');
                 renderCalendar();
             }
-            
             saveState();
         }
 
+        // ===== CALENDAR =====
         function renderCalendar() {
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"];
-            
+            const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
             document.getElementById('calendarTitle').textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
-            
             const firstDay = new Date(state.currentYear, state.currentMonth, 1);
             const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
             const prevLastDay = new Date(state.currentYear, state.currentMonth, 0);
-            
             const firstDayOfWeek = firstDay.getDay();
             const lastDate = lastDay.getDate();
             const prevLastDate = prevLastDay.getDate();
-            
             const daysContainer = document.getElementById('calendarDays');
             daysContainer.innerHTML = '';
-            
             const today = new Date();
-            const todayDate = today.getDate();
-            const todayMonth = today.getMonth();
-            const todayYear = today.getFullYear();
-            
             const events = getCalendarEvents();
-            
-            // Previous month days
             for (let i = firstDayOfWeek - 1; i >= 0; i--) {
                 const day = document.createElement('div');
                 day.className = 'calendar-day other-month';
                 day.innerHTML = `<div class="calendar-day-number">${prevLastDate - i}</div>`;
                 daysContainer.appendChild(day);
             }
-            
-            // Current month days
             for (let i = 1; i <= lastDate; i++) {
                 const day = document.createElement('div');
                 day.className = 'calendar-day';
-                
-                if (i === todayDate && state.currentMonth === todayMonth && state.currentYear === todayYear) {
+                if (i === today.getDate() && state.currentMonth === today.getMonth() && state.currentYear === today.getFullYear()) {
                     day.classList.add('today');
                 }
-                
                 const dateStr = `${state.currentYear}-${String(state.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
                 const dayEvents = events.filter(e => e.date === dateStr);
-                
                 let eventsHTML = '';
                 if (dayEvents.length > 0) {
                     eventsHTML = '<div class="calendar-events">';
                     dayEvents.forEach(event => {
-                        eventsHTML += `
-                            <div class="calendar-event-item ${event.type}" onclick="jumpToTask('${event.itemId}')" title="${event.title}">
-                                ${event.type === 'deadline' ? '📅' : '🔔'} ${event.title.substring(0, 20)}${event.title.length > 20 ? '...' : ''}
-                            </div>
-                        `;
+                        eventsHTML += `<div class="calendar-event-item ${event.type}" onclick="jumpToTask('${event.itemId}')" title="${event.title}">
+                            ${event.type === 'deadline' ? '📅' : '🔔'} ${event.title.substring(0, 20)}${event.title.length > 20 ? '...' : ''}</div>`;
                     });
                     eventsHTML += '</div>';
                 }
-                
-                day.innerHTML = `
-                    <div class="calendar-day-number">${i}</div>
-                    ${eventsHTML}
-                `;
-                
+                day.innerHTML = `<div class="calendar-day-number">${i}</div>${eventsHTML}`;
                 daysContainer.appendChild(day);
             }
-            
-            // Next month days
             const totalCellsUsed = firstDayOfWeek + lastDate;
             const remainingCells = totalCellsUsed % 7 === 0 ? 0 : 7 - (totalCellsUsed % 7);
-            
             for (let i = 1; i <= remainingCells; i++) {
                 const day = document.createElement('div');
                 day.className = 'calendar-day other-month';
@@ -3228,73 +942,46 @@ function handleEmailCapture(event) {
 
         function getCalendarEvents() {
             const events = [];
-            
             if (state.userData.arrivalDate) {
                 const arrivalDate = new Date(state.userData.arrivalDate);
                 Object.keys(checklistData).forEach(phaseKey => {
-                    const phase = checklistData[phaseKey];
-                    phase.items.forEach((item, index) => {
+                    checklistData[phaseKey].items.forEach((item, index) => {
                         const itemId = `${phaseKey}-${index}`;
                         if (item.deadline && !state.completedItems.has(itemId)) {
                             const deadlineDate = new Date(arrivalDate.getTime() + (item.deadline * 24 * 60 * 60 * 1000));
-                            const dateStr = deadlineDate.toISOString().split('T')[0];
-                            events.push({
-                                date: dateStr,
-                                type: 'deadline',
-                                title: item.task,
-                                itemId: itemId
-                            });
+                            events.push({ date: deadlineDate.toISOString().split('T')[0], type: 'deadline', title: item.task, itemId });
                         }
                     });
                 });
             }
-            
             Object.keys(state.reminders).forEach(itemId => {
                 const reminderDate = state.reminders[itemId];
                 if (reminderDate) {
                     const [phaseKey, index] = itemId.split('-');
-                    const phase = checklistData[phaseKey];
-                    const task = phase ? phase.items[parseInt(index)] : null;
-                    
-                    events.push({
-                        date: reminderDate,
-                        type: 'reminder',
-                        title: task ? task.task : 'Reminder',
-                        itemId: itemId
-                    });
+                    const task = checklistData[phaseKey]?.items[parseInt(index)];
+                    events.push({ date: reminderDate, type: 'reminder', title: task ? task.task : 'Reminder', itemId });
                 }
             });
-            
             return events;
         }
 
         function jumpToTask(itemId) {
             if (!itemId) return;
-            
             showPage('dashboard');
-            
-            const [phaseKey, index] = itemId.split('-');
+            const [phaseKey] = itemId.split('-');
             state.collapsedPhases.delete(phaseKey);
-            
             state.currentFilter = 'all';
             state.currentTypeFilter = 'all';
-            
             saveState();
             renderDashboard();
-            
             setTimeout(() => {
                 const targetCheckbox = document.querySelector(`.task-checkbox[data-task-id="${itemId}"]`);
                 if (targetCheckbox) {
                     const taskEl = targetCheckbox.closest('.task-item');
                     if (taskEl) {
                         taskEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                        
-                        taskEl.style.transition = 'background 0.3s ease';
                         taskEl.style.background = 'var(--accent-light)';
-                        
-                        setTimeout(() => {
-                            taskEl.style.background = '';
-                        }, 2500);
+                        setTimeout(() => { taskEl.style.background = ''; }, 2500);
                     }
                 }
             }, 300);
@@ -3307,65 +994,34 @@ function handleEmailCapture(event) {
                 state.currentYear = today.getFullYear();
             } else {
                 state.currentMonth += delta;
-                if (state.currentMonth > 11) {
-                    state.currentMonth = 0;
-                    state.currentYear++;
-                } else if (state.currentMonth < 0) {
-                    state.currentMonth = 11;
-                    state.currentYear--;
-                }
+                if (state.currentMonth > 11) { state.currentMonth = 0; state.currentYear++; }
+                else if (state.currentMonth < 0) { state.currentMonth = 11; state.currentYear--; }
             }
             renderCalendar();
             saveState();
         }
 
-        function showUpgradeModal() {
-            document.getElementById('upgradeModal').classList.add('active');
-        }
-
-        function closeUpgradeModal() {
-            document.getElementById('upgradeModal').classList.remove('active');
+        function showUserMenu() {
+            const user = auth.currentUser;
+            if (user && confirm(`Signed in as ${user.email}\n\nSign out?`)) signOut();
         }
 
         function toggleTheme() {
             const html = document.documentElement;
-            const currentTheme = html.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            
+            const newTheme = (html.getAttribute('data-theme') || 'dark') === 'dark' ? 'light' : 'dark';
             html.setAttribute('data-theme', newTheme);
-            
-            const toggleButtons = [
-                document.getElementById('themeToggle'),
-                document.getElementById('landingThemeToggle')
-            ];
-            
-            toggleButtons.forEach(btn => {
-                if (btn) {
-                    btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
-                }
+            [document.getElementById('themeToggle'), document.getElementById('landingThemeToggle')].forEach(btn => {
+                if (btn) btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
             });
-            
             localStorage.setItem('theme', newTheme);
         }
 
         function loadTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            
-            const toggleButtons = [
-                document.getElementById('themeToggle'),
-                document.getElementById('landingThemeToggle')
-            ];
-            
-            toggleButtons.forEach(btn => {
-                if (btn) {
-                    btn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-                }
+            [document.getElementById('themeToggle'), document.getElementById('landingThemeToggle')].forEach(btn => {
+                if (btn) btn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
             });
-        }
-
-        function showUserMenu() {
-            alert('User menu coming soon!');
         }
 
         function saveState() {
@@ -3382,6 +1038,8 @@ function handleEmailCapture(event) {
                 collapsedPhases: Array.from(state.collapsedPhases)
             };
             localStorage.setItem('expatsnl', JSON.stringify(stateToSave));
+            const user = auth.currentUser;
+            if (user) saveUserDataToCloud(user.uid);
         }
 
         function loadState() {
@@ -3401,14 +1059,11 @@ function handleEmailCapture(event) {
             }
         }
 
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
+        window.onclick = event => {
+            if (event.target.classList.contains('modal') || event.target.classList.contains('reminder-picker-modal')) {
                 event.target.classList.remove('active');
             }
-            if (event.target.classList.contains('reminder-picker-modal')) {
-                event.target.classList.remove('active');
-            }
-        }
+        };
 
         init();
     </script>
