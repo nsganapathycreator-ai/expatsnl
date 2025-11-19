@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ExpatsNL - Your Moving Companion</title>
+    <meta name="description" content="Complete moving checklist for expats relocating to the Netherlands. Track tasks, deadlines, and get helpful tips.">
+    <title>ExpatsNL - Your Complete Moving Guide to the Netherlands</title>
     <style>
         /* ===== Design System ===== */
         :root {
-            /* Light Theme */
             --bg-app: #fafbfc;
             --bg-surface: #ffffff;
             --bg-elevated: #f5f7fa;
@@ -41,7 +41,6 @@
         }
 
         [data-theme="dark"] {
-            /* Dark Theme - Modern & Cohesive */
             --bg-app: #0d1117;
             --bg-surface: #161b22;
             --bg-elevated: #1c2128;
@@ -81,6 +80,320 @@
             transition: background 0.3s ease, color 0.3s ease;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ===== Landing Page Styles ===== */
+        .landing-page {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .landing-nav {
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .landing-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+        }
+
+        .landing-logo span {
+            font-size: 32px;
+        }
+
+        .btn-theme-landing {
+            padding: 8px 16px;
+            border-radius: var(--radius-full);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-theme-landing:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 20px;
+            border-radius: var(--radius-full);
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            opacity: 0.95;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .email-capture-form {
+            max-width: 500px;
+            margin: 0 auto 60px;
+            background: white;
+            padding: 8px;
+            border-radius: var(--radius-full);
+            display: flex;
+            gap: 8px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .email-capture-form input {
+            flex: 1;
+            padding: 16px 24px;
+            border: none;
+            border-radius: var(--radius-full);
+            font-size: 16px;
+            outline: none;
+            color: var(--text-primary);
+        }
+
+        .email-capture-form button {
+            padding: 16px 32px;
+            border: none;
+            border-radius: var(--radius-full);
+            background: var(--accent);
+            color: white;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+        }
+
+        .email-capture-form button:hover {
+            background: var(--accent-hover);
+            transform: translateY(-2px);
+        }
+
+        .trust-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+
+        .trust-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .app-preview {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.3);
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .app-preview-placeholder {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            aspect-ratio: 16/9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            font-size: 18px;
+            font-weight: 600;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .app-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            height: 100%;
+            padding: 20px;
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .preview-card-title {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .preview-card-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .features-section {
+            background: white;
+            padding: 100px 40px;
+        }
+
+        .features-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 48px;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            font-size: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-bottom: 60px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+        }
+
+        .feature-card {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 56px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .benefits-section {
+            background: var(--bg-elevated);
+            padding: 100px 40px;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 60px;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .benefit-content h3 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+        }
+
+        .benefit-list {
+            list-style: none;
+        }
+
+        .benefit-list li {
+            padding: 16px 0;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-secondary);
+        }
+
+        .benefit-check {
+            width: 24px;
+            height: 24px;
+            background: var(--success);
+            border-radius: 50%;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 14px;
+        }
+
+        .benefit-image {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: var(--shadow-lg);
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 100px 40px;
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: 48px;
+            font-weight: 800;
+            margin-bottom: 24px;
+        }
+
+        .cta-section p {
+            font-size: 20px;
+            margin-bottom: 40px;
+            opacity: 0.95;
         }
 
         /* ===== Navigation ===== */
@@ -263,6 +576,12 @@
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .form-note {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
         }
 
         .btn-start {
@@ -472,19 +791,20 @@
             padding-bottom: 4px;
         }
 
-		.category-icon {
-			display: flex;
-			flex-direction: column;
-			align-items: center;
-			gap: 4px;
-			padding: 8px 10px;
-			border-radius: var(--radius-md);
-			background: var(--bg-surface);
-			border: 1px solid var(--border-subtle);
-			cursor: pointer;
-			transition: var(--transition);
-			min-width: 60px;
-		}
+        .category-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 10px;
+            border-radius: var(--radius-md);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 60px;
+        }
+
         .category-icon:hover {
             background: var(--bg-hover);
             transform: translateY(-2px);
@@ -495,15 +815,16 @@
             border-color: var(--accent);
         }
 
-		.category-icon-emoji {
-			font-size: 20px;
-		}
+        .category-icon-emoji {
+            font-size: 20px;
+        }
 
-		.category-icon-text {
-			font-size: 11px;
-			font-weight: 600;
-			color: var(--text-secondary);
-		}
+        .category-icon-text {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
         .category-icon.active .category-icon-text {
             color: var(--accent);
         }
@@ -881,11 +1202,11 @@
             border-color: var(--accent);
         }
 
-		.calendar-grid {
-			display: grid;
-			grid-template-columns: repeat(7, 1fr);
-			gap: 8px;
-		}
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+        }
 
         .calendar-day-header {
             text-align: center;
@@ -896,56 +1217,18 @@
             text-transform: uppercase;
         }
 
-.calendar-day {
-    border: 1px solid var(--border-subtle);
-    border-radius: var(--radius-md);
-    padding: 8px;
-    cursor: pointer;
-    transition: var(--transition);
-    position: relative;
-    background: var(--bg-elevated);
-    min-height: 100px;
-    display: flex;
-    flex-direction: column;
-}
-
-.calendar-events {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-top: 4px;
-    font-size: 10px;
-    overflow: hidden;
-}
-
-.calendar-event-item {
-    padding: 4px 6px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.calendar-event-item.deadline {
-    background: rgba(239, 68, 68, 0.1);
-    color: var(--danger);
-    border-left: 2px solid var(--danger);
-}
-
-.calendar-event-item.reminder {
-    background: rgba(245, 158, 11, 0.1);
-    color: var(--warning);
-    border-left: 2px solid var(--warning);
-}
-
-.calendar-event-item:hover {
-    transform: translateX(2px);
-    opacity: 0.8;
-}
+        .calendar-day {
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            background: var(--bg-elevated);
+            min-height: 100px;
+            display: flex;
+            flex-direction: column;
+        }
 
         .calendar-day:hover {
             background: var(--bg-hover);
@@ -969,24 +1252,41 @@
         }
 
         .calendar-events {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 4px;
             font-size: 10px;
+            overflow: hidden;
         }
 
-        .calendar-event-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            display: inline-block;
-            margin: 2px;
+        .calendar-event-item {
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
-        .calendar-event-dot.deadline {
-            background: var(--danger);
+        .calendar-event-item.deadline {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+            border-left: 2px solid var(--danger);
         }
 
-        .calendar-event-dot.reminder {
-            background: var(--warning);
+        .calendar-event-item.reminder {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning);
+            border-left: 2px solid var(--warning);
+        }
+
+        .calendar-event-item:hover {
+            transform: translateX(2px);
+            opacity: 0.8;
         }
 
         /* ===== Reminder Picker Modal ===== */
@@ -1179,43 +1479,6 @@
             color: var(--text-tertiary);
         }
 
-        .critical-tasks-section {
-            background: var(--bg-surface);
-            border-radius: var(--radius-lg);
-            padding: 24px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .critical-tasks-section h2 {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 16px;
-        }
-
-        .critical-task-item {
-            padding: 16px;
-            border-left: 3px solid var(--danger);
-            background: rgba(239, 68, 68, 0.05);
-            border-radius: var(--radius-md);
-            margin-bottom: 12px;
-        }
-
-        .critical-task-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .critical-task-title {
-            font-weight: 600;
-            color: var(--danger);
-            margin-bottom: 4px;
-            font-size: 14px;
-        }
-
-        .critical-task-meta {
-            font-size: 12px;
-            color: var(--text-tertiary);
-        }
-
         /* ===== Plans ===== */
         .plans-grid {
             display: grid;
@@ -1287,11 +1550,237 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--text-tertiary);
         }
+
+        /* ===== Responsive ===== */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 42px;
+            }
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            .email-capture-form {
+                flex-direction: column;
+            }
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                grid-template-columns: 1fr;
+            }
+            .sidebar, .right-panel {
+                position: static;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
+    <!-- Landing Page -->
+    <div id="landingPage" class="landing-page">
+        <div class="landing-nav">
+            <div class="landing-logo">
+                <span>🌍</span>
+                ExpatsNL
+            </div>
+            <button class="btn-theme-landing" onclick="toggleTheme()" id="landingThemeToggle">🌙</button>
+        </div>
+
+        <div class="hero-section">
+            <div class="hero-badge">🎉 Trusted by 1,000+ Expats</div>
+            <h1 class="hero-title">Your Complete Guide to Moving to the Netherlands</h1>
+            <p class="hero-subtitle">
+                Stop feeling overwhelmed. Get a personalized checklist, deadlines, and expert tips for every step of your move.
+            </p>
+
+            <form name="email-capture" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="email-capture-form" onsubmit="return handleEmailCapture(event)">
+                <input type="hidden" name="form-name" value="email-capture" />
+                <p style="display: none;">
+                    <label>Don't fill this out: <input name="bot-field" /></label>
+                </p>
+                <input type="email" name="email" id="landingEmail" placeholder="Enter your email" required>
+                <button type="submit">Get Started Free →</button>
+            </form>
+
+            <div class="trust-indicators">
+                <div class="trust-item">
+                    <span>✓</span>
+                    <span>100% Free</span>
+                </div>
+                <div class="trust-item">
+                    <span>✓</span>
+                    <span>No Credit Card</span>
+                </div>
+                <div class="trust-item">
+                    <span>✓</span>
+                    <span>Setup in 2 minutes</span>
+                </div>
+            </div>
+
+            <div class="app-preview">
+                <div class="app-preview-placeholder">
+                    <div class="app-preview-grid">
+                        <div class="preview-card">
+                            <div class="preview-card-title">Completed</div>
+                            <div class="preview-card-value">24/47</div>
+                        </div>
+                        <div class="preview-card">
+                            <div class="preview-card-title">Progress</div>
+                            <div class="preview-card-value">51%</div>
+                        </div>
+                        <div class="preview-card">
+                            <div class="preview-card-title">Phase</div>
+                            <div class="preview-card-value" style="font-size: 16px;">✈️ Arrival</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="features-section">
+            <div class="features-container">
+                <h2 class="section-title">Everything You Need in One Place</h2>
+                <p class="section-subtitle">We've organized the chaos of moving into a simple, step-by-step process</p>
+
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">✅</div>
+                        <h3 class="feature-title">Personalized Checklist</h3>
+                        <p class="feature-description">Get tasks tailored to your situation - work visa, family move, or student relocation.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">⏰</div>
+                        <h3 class="feature-title">Smart Deadlines</h3>
+                        <p class="feature-description">Never miss important dates. Track mandatory registrations and document deadlines.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <h3 class="feature-title">Expert Tips</h3>
+                        <p class="feature-description">Learn from 1,000+ expats who've successfully made the move before you.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📅</div>
+                        <h3 class="feature-title">Calendar View</h3>
+                        <p class="feature-description">Visualize your tasks and reminders in an intuitive monthly calendar.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🏆</div>
+                        <h3 class="feature-title">Track Progress</h3>
+                        <p class="feature-description">Stay motivated with visual progress tracking and achievement milestones.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📱</div>
+                        <h3 class="feature-title">Works Everywhere</h3>
+                        <p class="feature-description">Access your checklist from any device - desktop, tablet, or mobile.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="benefits-section">
+            <div class="benefits-grid">
+                <div class="benefit-content">
+                    <h3>From Overwhelmed to Organized</h3>
+                    <ul class="benefit-list">
+                        <li>
+                            <span class="benefit-check">✓</span>
+                            <span>Register at gemeente within 5 days (we remind you!)</span>
+                        </li>
+                        <li>
+                            <span class="benefit-check">✓</span>
+                            <span>Get your BSN number sorted immediately</span>
+                        </li>
+                        <li>
+                            <span class="benefit-check">✓</span>
+                            <span>Open Dutch bank account with confidence</span>
+                        </li>
+                        <li>
+                            <span class="benefit-check">✓</span>
+                            <span>Never forget health insurance deadlines</span>
+                        </li>
+                        <li>
+                            <span class="benefit-check">✓</span>
+                            <span>Find housing without the stress</span>
+                        </li>
+                        <li>
+                            <span class="benefit-check">✓</span>
+                            <span>Handle taxes like a local</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="benefit-image">
+                    📊 Interactive Dashboard Preview
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2>Ready to Make Your Move Stress-Free?</h2>
+            <p>Join 1,000+ expats who successfully navigated their move with ExpatsNL</p>
+            
+            <form name="email-capture-footer" method="POST" data-netlify="true" netlify-honeypot="bot-field-2" class="email-capture-form" onsubmit="return handleEmailCapture(event)">
+                <input type="hidden" name="form-name" value="email-capture-footer" />
+                <p style="display: none;">
+                    <label>Don't fill this out: <input name="bot-field-2" /></label>
+                </p>
+                <input type="email" name="email" placeholder="Enter your email" required>
+                <button type="submit">Start Now - It's Free →</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Onboarding Screen -->
+    <div id="onboardingScreen" class="onboarding-screen hidden">
+        <div class="onboarding-card">
+            <h1>Welcome to ExpatsNL 👋</h1>
+            <p class="subtitle">Let's personalize your moving checklist based on your situation</p>
+            
+            <form name="onboarding" method="POST" data-netlify="true" netlify-honeypot="bot-field-3" onsubmit="return handleOnboarding(event)">
+                <input type="hidden" name="form-name" value="onboarding" />
+                <p style="display: none;">
+                    <label>Don't fill this out: <input name="bot-field-3" /></label>
+                </p>
+                
+                <input type="hidden" name="email" id="onboardingEmail" />
+                
+                <div class="form-group">
+                    <label>Your Name <span style="color: var(--accent);">*</span></label>
+                    <input type="text" id="userName" name="name" placeholder="Sarah Martinez" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Arrival Date <span style="color: var(--accent);">*</span></label>
+                    <input type="date" id="arrivalDate" name="arrival_date" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Moving For</label>
+                    <select id="movingReason" name="moving_reason">
+                        <option value="work">Work</option>
+                        <option value="study">Study</option>
+                        <option value="family">Family</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>City</label>
+                    <select id="city" name="city">
+                        <option value="amsterdam">Amsterdam</option>
+                        <option value="rotterdam">Rotterdam</option>
+                        <option value="den_haag">Den Haag</option>
+                        <option value="utrecht">Utrecht</option>
+                        <option value="eindhoven">Eindhoven</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn-start">Create My Checklist →</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- App Navigation (hidden initially) -->
+    <nav id="appNav" class="hidden">
         <div class="nav-content">
             <div class="logo">
                 <span>🌍</span>
@@ -1300,59 +1789,14 @@
             <div class="nav-links">
                 <a id="navDashboard" class="active" onclick="showPage('dashboard')">Dashboard</a>
                 <a id="navCalendar" onclick="showPage('calendar')">Calendar</a>
-                <a onclick="showView('community')">Community</a>
-                <a onclick="showView('resources')">Resources</a>
-                <a onclick="showView('help')">Help</a>
             </div>
             <div class="user-menu">
                 <button class="btn-theme" onclick="toggleTheme()" id="themeToggle">🌙</button>
                 <button class="btn-premium" onclick="showUpgradeModal()">Upgrade</button>
-                <div class="avatar" onclick="showUserMenu()">SM</div>
+                <div class="avatar" onclick="showUserMenu()" id="userAvatar">SM</div>
             </div>
         </div>
     </nav>
-
-    <!-- Onboarding Screen -->
-    <div id="onboardingScreen" class="onboarding-screen">
-        <div class="onboarding-card">
-            <h1>Welcome to ExpatsNL 👋</h1>
-            <p class="subtitle">Let's personalize your moving checklist based on your situation</p>
-            
-            <div class="form-group">
-                <label>Your Name</label>
-                <input type="text" id="userName" placeholder="Sarah Martinez">
-            </div>
-            
-            <div class="form-group">
-                <label>Arrival Date</label>
-                <input type="date" id="arrivalDate">
-            </div>
-            
-            <div class="form-group">
-                <label>Moving For</label>
-                <select id="movingReason">
-                    <option value="work">Work</option>
-                    <option value="study">Study</option>
-                    <option value="family">Family</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-            
-            <div class="form-group">
-                <label>City</label>
-                <select id="city">
-                    <option value="amsterdam">Amsterdam</option>
-                    <option value="rotterdam">Rotterdam</option>
-                    <option value="den_haag">Den Haag</option>
-                    <option value="utrecht">Utrecht</option>
-                    <option value="eindhoven">Eindhoven</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-            
-            <button class="btn-start" onclick="startApp()">Start My Journey →</button>
-        </div>
-    </div>
 
     <!-- Dashboard Page -->
     <div id="dashboardPage" class="hidden">
@@ -1453,31 +1897,31 @@
         </div>
     </div>
 
-		<!-- Calendar Page -->
-	<div id="calendarPage" class="hidden">
-		<div class="container" style="grid-template-columns: 1fr; max-width: 1200px;">
-			<div class="calendar-container">
-				<div class="calendar-header">
-					<h2 class="calendar-title" id="calendarTitle">November 2025</h2>
-					<div class="calendar-nav">
-						<button onclick="changeMonth(-1)">← Prev</button>
-						<button onclick="changeMonth(0)">Today</button>
-						<button onclick="changeMonth(1)">Next →</button>
-					</div>
-				</div>
-				<div class="calendar-grid">
-					<div class="calendar-day-header">Sun</div>
-					<div class="calendar-day-header">Mon</div>
-					<div class="calendar-day-header">Tue</div>
-					<div class="calendar-day-header">Wed</div>
-					<div class="calendar-day-header">Thu</div>
-					<div class="calendar-day-header">Fri</div>
-					<div class="calendar-day-header">Sat</div>
-				</div>
-				<div id="calendarDays" class="calendar-grid"></div>
-			</div>
-		</div>
-	</div>
+    <!-- Calendar Page -->
+    <div id="calendarPage" class="hidden">
+        <div class="container" style="grid-template-columns: 1fr; max-width: 1200px;">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <h2 class="calendar-title" id="calendarTitle">November 2025</h2>
+                    <div class="calendar-nav">
+                        <button onclick="changeMonth(-1)">← Prev</button>
+                        <button onclick="changeMonth(0)">Today</button>
+                        <button onclick="changeMonth(1)">Next →</button>
+                    </div>
+                </div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">Sun</div>
+                    <div class="calendar-day-header">Mon</div>
+                    <div class="calendar-day-header">Tue</div>
+                    <div class="calendar-day-header">Wed</div>
+                    <div class="calendar-day-header">Thu</div>
+                    <div class="calendar-day-header">Fri</div>
+                    <div class="calendar-day-header">Sat</div>
+                </div>
+                <div id="calendarDays" class="calendar-grid"></div>
+            </div>
+        </div>
+    </div>
 
     <!-- Task Details Modal -->
     <div id="taskModal" class="modal">
@@ -1542,6 +1986,18 @@
         </div>
     </div>
 
+    <!-- Thank You Modal -->
+    <div id="thankYouModal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div style="font-size: 64px; margin-bottom: 16px;">🎉</div>
+            <h2 style="margin-bottom: 12px;">Welcome Aboard!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 24px;">
+                Your personalized checklist is ready! Let's make your move to the Netherlands smooth and stress-free.
+            </p>
+            <button class="btn-start" onclick="closeThankYouModal()">View My Checklist →</button>
+        </div>
+    </div>
+
     <script>
         // State management
         let state = {
@@ -1551,7 +2007,7 @@
             currentFilter: 'all',
             currentPhase: 'arrival',
             currentTypeFilter: 'all',
-            currentPage: 'dashboard',
+            currentPage: 'landing',
             currentMonth: new Date().getMonth(),
             currentYear: new Date().getFullYear(),
             currentReminderTask: null,
@@ -1964,17 +2420,17 @@
                         }
                     },
                     {
-						task: "Register at embassy",
-						  category: "legal",
-						  type: "optional",
-						  description: "Register with home embassy.",
-						  priority: "optional",
-						  deadline: 90,
-						  details: {
-							where: "Embassy or consulate",
-							what: "Passport, proof of address",
-							tips: ["Useful in emergencies"],
-							providers: []
+                        task: "Register at embassy",
+                        category: "legal",
+                        type: "optional",
+                        description: "Register with home embassy.",
+                        priority: "optional",
+                        deadline: 90,
+                        details: {
+                            where: "Embassy in The Hague",
+                            what: "Passport, residence proof",
+                            tips: ["Helps in emergencies", "Passport renewals"],
+                            providers: []
                         }
                     },
                     {
@@ -2051,6 +2507,7 @@
             }
         };
 
+
         // ============================================
         // END OF checklistData
         // ============================================
@@ -2059,29 +2516,116 @@
             loadTheme();
             loadState();
             
-            if (state.userData && state.userData.name) {
-                document.getElementById('onboardingScreen').classList.add('hidden');
-                document.getElementById('dashboardPage').classList.remove('hidden');
-                renderDashboard();
+            // Check if user has completed onboarding
+            if (state.userData && state.userData.name && state.userData.arrivalDate) {
+                showApp();
             }
         }
 
-        function startApp() {
+        function handleEmailCapture(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            const email = form.querySelector('input[type="email"]').value;
+            
+            // Submit to Netlify
+            fetch('/', {
+                method: 'POST',
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            })
+            .then(() => {
+                // Store email for onboarding
+                state.userData.email = email;
+                
+                // Show onboarding screen
+                document.getElementById('landingPage').classList.add('hidden');
+                document.getElementById('onboardingScreen').classList.remove('hidden');
+                
+                // Pre-fill email in onboarding
+                document.getElementById('onboardingEmail').value = email;
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Still proceed even if submission fails
+                state.userData.email = email;
+                document.getElementById('landingPage').classList.add('hidden');
+                document.getElementById('onboardingScreen').classList.remove('hidden');
+                document.getElementById('onboardingEmail').value = email;
+            });
+            
+            return false;
+        }
+
+        function handleOnboarding(event) {
+            event.preventDefault();
+            
+            const form = event.target;
+            const formData = new FormData(form);
+            
             const name = document.getElementById('userName').value;
             const arrivalDate = document.getElementById('arrivalDate').value;
             const movingReason = document.getElementById('movingReason').value;
             const city = document.getElementById('city').value;
-
+            
             if (!name || !arrivalDate) {
-                alert('Please fill in all required fields');
-                return;
+                alert('Please fill in name and arrival date');
+                return false;
             }
+            
+            // Submit to Netlify
+            fetch('/', {
+                method: 'POST',
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams(formData).toString()
+            })
+            .then(() => {
+                // Save to state
+                state.userData = {
+                    ...state.userData,
+                    name,
+                    arrivalDate,
+                    movingReason,
+                    city
+                };
+                saveState();
+                
+                // Show thank you modal
+                document.getElementById('thankYouModal').classList.add('active');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Still save and proceed
+                state.userData = {
+                    ...state.userData,
+                    name,
+                    arrivalDate,
+                    movingReason,
+                    city
+                };
+                saveState();
+                document.getElementById('thankYouModal').classList.add('active');
+            });
+            
+            return false;
+        }
 
-            state.userData = { name, arrivalDate, movingReason, city };
-            saveState();
-
+        function closeThankYouModal() {
+            document.getElementById('thankYouModal').classList.remove('active');
             document.getElementById('onboardingScreen').classList.add('hidden');
+            showApp();
+        }
+
+        function showApp() {
+            document.getElementById('appNav').classList.remove('hidden');
             document.getElementById('dashboardPage').classList.remove('hidden');
+            
+            // Set user avatar
+            if (state.userData.name) {
+                const initials = state.userData.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+                document.getElementById('userAvatar').textContent = initials;
+            }
             
             renderDashboard();
         }
@@ -2100,7 +2644,6 @@
             const container = document.getElementById('categoryFilter');
             if (!container) return;
 
-            // Get all unique categories from checklistData
             const categories = new Set();
             Object.values(checklistData).forEach(phase => {
                 phase.items.forEach(item => {
@@ -2110,47 +2653,23 @@
                 });
             });
 
-            // Sort categories alphabetically
             const sortedCategories = Array.from(categories).sort();
 
-            // Icon mapping
             const categoryIcons = {
-                all: '📋',
-                initial: '✈️',
-                housing: '🏠',
-                insurance: '🛡️',
-                finance: '💰',
-                taxes: '📊',
-                education: '📚',
-                childcare: '👶',
-                transport: '🚲',
-                utilities: '💡',
-                legal: '⚖️',
-                employment: '💼',
-                work: '💼',
-                integration: '🤝',
-                healthcare: '🏥'
+                all: '📋', initial: '✈️', housing: '🏠', insurance: '🛡️',
+                finance: '💰', taxes: '📊', education: '📚', childcare: '👶',
+                transport: '🚲', utilities: '💡', legal: '⚖️', employment: '💼',
+                work: '💼', integration: '🤝', healthcare: '🏥'
             };
 
-            // Name mapping (for display)
             const categoryNames = {
-                initial: 'Initial',
-                housing: 'Housing',
-                insurance: 'Insurance',
-                finance: 'Finance',
-                taxes: 'Taxes',
-                education: 'Education',
-                childcare: 'Childcare',
-                transport: 'Transport',
-                utilities: 'Utilities',
-                legal: 'Legal',
-                employment: 'Work',
-                work: 'Work',
-                integration: 'Integration',
-                healthcare: 'Healthcare'
+                initial: 'Initial', housing: 'Housing', insurance: 'Insurance',
+                finance: 'Finance', taxes: 'Taxes', education: 'Education',
+                childcare: 'Childcare', transport: 'Transport', utilities: 'Utilities',
+                legal: 'Legal', employment: 'Work', work: 'Work',
+                integration: 'Integration', healthcare: 'Healthcare'
             };
 
-            // Build HTML
             let html = `
                 <div class="category-icon ${state.currentFilter === 'all' ? 'active' : ''}" data-category="all" onclick="filterByCategory('all')">
                     <div class="category-icon-emoji">📋</div>
@@ -2200,44 +2719,44 @@
             }
         }
 
-		function renderMilestones() {
-			const container = document.getElementById('milestoneList');
-			container.innerHTML = '';
+        function renderMilestones() {
+            const container = document.getElementById('milestoneList');
+            container.innerHTML = '';
 
-			Object.keys(checklistData).forEach(phaseKey => {
-				const phase = checklistData[phaseKey];
-				
-				// Calculate completed tasks for this phase
-				let completed = 0;
-				let total = phase.items.length;
-				
-				phase.items.forEach((item, index) => {
-					const itemId = `${phaseKey}-${index}`;
-					if (state.completedItems.has(itemId)) {
-						completed++;
-					}
-				});
-				
-				const li = document.createElement('li');
-				li.className = 'milestone-item';
-				if (phaseKey === state.currentPhase) {
-					li.classList.add('active');
-				}
-				li.onclick = () => {
-					state.currentPhase = phaseKey;
-					saveState();
-					renderDashboard();
-				};
-				li.innerHTML = `
-					<span class="milestone-icon">${phase.icon}</span>
-					<div style="flex: 1; min-width: 0;">
-						<div>${phase.title.split(' - ')[1] || phase.title}</div>
-						<div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">${completed}/${total}</div>
-					</div>
-				`;
-				container.appendChild(li);
-			});
-		}
+            Object.keys(checklistData).forEach(phaseKey => {
+                const phase = checklistData[phaseKey];
+                
+                let completed = 0;
+                let total = phase.items.length;
+                
+                phase.items.forEach((item, index) => {
+                    const itemId = `${phaseKey}-${index}`;
+                    if (state.completedItems.has(itemId)) {
+                        completed++;
+                    }
+                });
+                
+                const li = document.createElement('li');
+                li.className = 'milestone-item';
+                if (phaseKey === state.currentPhase) {
+                    li.classList.add('active');
+                }
+                li.onclick = () => {
+                    state.currentPhase = phaseKey;
+                    saveState();
+                    renderDashboard();
+                };
+                li.innerHTML = `
+                    <span class="milestone-icon">${phase.icon}</span>
+                    <div style="flex: 1; min-width: 0;">
+                        <div>${phase.title.split(' - ')[1] || phase.title}</div>
+                        <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">${completed}/${total}</div>
+                    </div>
+                `;
+                container.appendChild(li);
+            });
+        }
+
         function renderTasks() {
             const container = document.getElementById('tasksContainer');
             container.innerHTML = '';
@@ -2592,31 +3111,10 @@
             return total;
         }
 
-        function getCategoryIcon(category) {
-            const icons = {
-                initial: '✈️', 
-                housing: '🏠', 
-                insurance: '🛡️',
-                finance: '💰', 
-                taxes: '📊', 
-                education: '📚',
-                childcare: '👶', 
-                transport: '🚲', 
-                utilities: '💡',
-                legal: '⚖️', 
-                employment: '💼',
-                work: '💼',
-                integration: '🤝',
-                healthcare: '🏥'
-            };
-            return icons[category] || '📋';
-        }
-
         // Calendar functions
         function showPage(page) {
             state.currentPage = page;
             
-            // Update nav
             document.querySelectorAll('.nav-links a').forEach(link => {
                 link.classList.remove('active');
             });
@@ -2635,100 +3133,86 @@
             saveState();
         }
 
-
-		function renderCalendar() {
-			const monthNames = ["January", "February", "March", "April", "May", "June",
-				"July", "August", "September", "October", "November", "December"];
-			
-			document.getElementById('calendarTitle').textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
-			
-			const firstDay = new Date(state.currentYear, state.currentMonth, 1);
-			const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
-			const prevLastDay = new Date(state.currentYear, state.currentMonth, 0);
-			
-			const firstDayOfWeek = firstDay.getDay();
-			const lastDate = lastDay.getDate();
-			const prevLastDate = prevLastDay.getDate();
-			
-			const daysContainer = document.getElementById('calendarDays');
-			daysContainer.innerHTML = '';
-			
-			const today = new Date();
-			const todayDate = today.getDate();
-			const todayMonth = today.getMonth();
-			const todayYear = today.getFullYear();
-			
-			// Get all events with task info
-			const events = getCalendarEvents();
-			
-			// Previous month days (to fill the first week)
-			for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-				const day = document.createElement('div');
-				day.className = 'calendar-day other-month';
-				day.innerHTML = `<div class="calendar-day-number">${prevLastDate - i}</div>`;
-				daysContainer.appendChild(day);
-			}
-			
-			// Current month days
-			for (let i = 1; i <= lastDate; i++) {
-				const day = document.createElement('div');
-				day.className = 'calendar-day';
-				
-				if (i === todayDate && state.currentMonth === todayMonth && state.currentYear === todayYear) {
-					day.classList.add('today');
-				}
-				
-				const dateStr = `${state.currentYear}-${String(state.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
-				const dayEvents = events.filter(e => e.date === dateStr);
-				
-				let eventsHTML = '';
-				if (dayEvents.length > 0) {
-					eventsHTML = '<div class="calendar-events">';
-					dayEvents.forEach(event => {
-						eventsHTML += `
-							<div class="calendar-event-item ${event.type}" onclick="jumpToTask('${event.itemId}')" title="${event.title}">
-								${event.type === 'deadline' ? '📅' : '🔔'} ${event.title.substring(0, 20)}${event.title.length > 20 ? '...' : ''}
-							</div>
-						`;
-					});
-					eventsHTML += '</div>';
-				}
-				
-				day.innerHTML = `
-					<div class="calendar-day-number">${i}</div>
-					${eventsHTML}
-				`;
-				
-				daysContainer.appendChild(day);
-			}
-			
-			// Next month days (to complete the last week)
-			const totalCellsUsed = firstDayOfWeek + lastDate;
-			const remainingCells = totalCellsUsed % 7 === 0 ? 0 : 7 - (totalCellsUsed % 7);
-			
-			for (let i = 1; i <= remainingCells; i++) {
-				const day = document.createElement('div');
-				day.className = 'calendar-day other-month';
-				day.innerHTML = `<div class="calendar-day-number">${i}</div>`;
-				daysContainer.appendChild(day);
-			}
-		}
-
+        function renderCalendar() {
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+            
+            document.getElementById('calendarTitle').textContent = `${monthNames[state.currentMonth]} ${state.currentYear}`;
+            
+            const firstDay = new Date(state.currentYear, state.currentMonth, 1);
+            const lastDay = new Date(state.currentYear, state.currentMonth + 1, 0);
+            const prevLastDay = new Date(state.currentYear, state.currentMonth, 0);
+            
+            const firstDayOfWeek = firstDay.getDay();
+            const lastDate = lastDay.getDate();
+            const prevLastDate = prevLastDay.getDate();
+            
+            const daysContainer = document.getElementById('calendarDays');
+            daysContainer.innerHTML = '';
+            
+            const today = new Date();
+            const todayDate = today.getDate();
+            const todayMonth = today.getMonth();
+            const todayYear = today.getFullYear();
+            
+            const events = getCalendarEvents();
+            
+            // Previous month days
+            for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day other-month';
+                day.innerHTML = `<div class="calendar-day-number">${prevLastDate - i}</div>`;
+                daysContainer.appendChild(day);
+            }
+            
+            // Current month days
+            for (let i = 1; i <= lastDate; i++) {
+                const day = document.createElement('div');
+                day.className = 'calendar-day';
+                
+                if (i === todayDate && state.currentMonth === todayMonth && state.currentYear === todayYear) {
+                    day.classList.add('today');
+                }
+                
+                const dateStr = `${state.currentYear}-${String(state.currentMonth + 1).padStart(2, '0')}-${String(i).padStart(2, '0')}`;
+                const dayEvents = events.filter(e => e.date === dateStr);
+                
+                let eventsHTML = '';
+                if (dayEvents.length > 0) {
+                    eventsHTML = '<div class="calendar-events">';
+                    dayEvents.forEach(event => {
+                        eventsHTML += `
+                            <div class="calendar-event-item ${event.type}" onclick="jumpToTask('${event.itemId}')" title="${event.title}">
+                                ${event.type === 'deadline' ? '📅' : '🔔'} ${event.title.substring(0, 20)}${event.title.length > 20 ? '...' : ''}
+                            </div>
+                        `;
+                    });
+                    eventsHTML += '</div>';
+                }
+                
+                day.innerHTML = `
+                    <div class="calendar-day-number">${i}</div>
+                    ${eventsHTML}
+                `;
+                
+                daysContainer.appendChild(day);
+            }
             
             // Next month days
-            const remainingDays = 42 - (firstDayOfWeek + lastDate);
-            for (let i = 1; i <= remainingDays; i++) {
+            const totalCellsUsed = firstDayOfWeek + lastDate;
+            const remainingCells = totalCellsUsed % 7 === 0 ? 0 : 7 - (totalCellsUsed % 7);
+            
+            for (let i = 1; i <= remainingCells; i++) {
                 const day = document.createElement('div');
                 day.className = 'calendar-day other-month';
                 day.innerHTML = `<div class="calendar-day-number">${i}</div>`;
                 daysContainer.appendChild(day);
             }
-        
+        }
 
         function getCalendarEvents() {
             const events = [];
             
-            // Add deadlines
             if (state.userData.arrivalDate) {
                 const arrivalDate = new Date(state.userData.arrivalDate);
                 Object.keys(checklistData).forEach(phaseKey => {
@@ -2741,69 +3225,67 @@
                             events.push({
                                 date: dateStr,
                                 type: 'deadline',
-                                title: item.task
+                                title: item.task,
+                                itemId: itemId
                             });
                         }
                     });
                 });
             }
             
-            // Add reminders
             Object.keys(state.reminders).forEach(itemId => {
                 const reminderDate = state.reminders[itemId];
                 if (reminderDate) {
+                    const [phaseKey, index] = itemId.split('-');
+                    const phase = checklistData[phaseKey];
+                    const task = phase ? phase.items[parseInt(index)] : null;
+                    
                     events.push({
                         date: reminderDate,
                         type: 'reminder',
-                        title: 'Reminder'
+                        title: task ? task.task : 'Reminder',
+                        itemId: itemId
                     });
                 }
             });
             
             return events;
         }
-		
-			function jumpToTask(itemId) {
-    if (!itemId) return;
-    
-    // Switch to dashboard
-    showPage('dashboard');
-    
-    // Expand the phase if collapsed
-    const [phaseKey, index] = itemId.split('-');
-    state.collapsedPhases.delete(phaseKey);
-    
-    // Set filters to show all
-    state.currentFilter = 'all';
-    state.currentTypeFilter = 'all';
-    
-    // Save and render
-    saveState();
-    renderDashboard();
-    
-    // Scroll to the specific task after rendering
-    setTimeout(() => {
-        const targetCheckbox = document.querySelector(`.task-checkbox[data-task-id="${itemId}"]`);
-        if (targetCheckbox) {
-            const taskEl = targetCheckbox.closest('.task-item');
-            if (taskEl) {
-                taskEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                
-                // Highlight it temporarily
-                taskEl.style.transition = 'background 0.3s ease';
-                taskEl.style.background = 'var(--accent-light)';
-                
-                setTimeout(() => {
-                    taskEl.style.background = '';
-                }, 2500);
-            }
+
+        function jumpToTask(itemId) {
+            if (!itemId) return;
+            
+            showPage('dashboard');
+            
+            const [phaseKey, index] = itemId.split('-');
+            state.collapsedPhases.delete(phaseKey);
+            
+            state.currentFilter = 'all';
+            state.currentTypeFilter = 'all';
+            
+            saveState();
+            renderDashboard();
+            
+            setTimeout(() => {
+                const targetCheckbox = document.querySelector(`.task-checkbox[data-task-id="${itemId}"]`);
+                if (targetCheckbox) {
+                    const taskEl = targetCheckbox.closest('.task-item');
+                    if (taskEl) {
+                        taskEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        
+                        taskEl.style.transition = 'background 0.3s ease';
+                        taskEl.style.background = 'var(--accent-light)';
+                        
+                        setTimeout(() => {
+                            taskEl.style.background = '';
+                        }, 2500);
+                    }
+                }
+            }, 300);
         }
-    }, 300);
-}
 
         function changeMonth(delta) {
             if (delta === 0) {
-                // Go to today
                 const today = new Date();
                 state.currentMonth = today.getMonth();
                 state.currentYear = today.getFullYear();
@@ -2821,10 +3303,6 @@
             saveState();
         }
 
-        function showView(view) {
-            alert(`${view} page coming soon!`);
-        }
-
         function showUpgradeModal() {
             document.getElementById('upgradeModal').classList.add('active');
         }
@@ -2839,7 +3317,17 @@
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
             html.setAttribute('data-theme', newTheme);
-            document.getElementById('themeToggle').textContent = newTheme === 'dark' ? '☀️' : '🌙';
+            
+            const toggleButtons = [
+                document.getElementById('themeToggle'),
+                document.getElementById('landingThemeToggle')
+            ];
+            
+            toggleButtons.forEach(btn => {
+                if (btn) {
+                    btn.textContent = newTheme === 'dark' ? '☀️' : '🌙';
+                }
+            });
             
             localStorage.setItem('theme', newTheme);
         }
@@ -2847,9 +3335,17 @@
         function loadTheme() {
             const savedTheme = localStorage.getItem('theme') || 'dark';
             document.documentElement.setAttribute('data-theme', savedTheme);
-            if (document.getElementById('themeToggle')) {
-                document.getElementById('themeToggle').textContent = savedTheme === 'dark' ? '☀️' : '🌙';
-            }
+            
+            const toggleButtons = [
+                document.getElementById('themeToggle'),
+                document.getElementById('landingThemeToggle')
+            ];
+            
+            toggleButtons.forEach(btn => {
+                if (btn) {
+                    btn.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
+                }
+            });
         }
 
         function showUserMenu() {
@@ -2882,7 +3378,7 @@
                 state.currentFilter = loaded.currentFilter || 'all';
                 state.currentPhase = loaded.currentPhase || 'arrival';
                 state.currentTypeFilter = loaded.currentTypeFilter || 'all';
-                state.currentPage = loaded.currentPage || 'dashboard';
+                state.currentPage = loaded.currentPage || 'landing';
                 state.currentMonth = loaded.currentMonth !== undefined ? loaded.currentMonth : new Date().getMonth();
                 state.currentYear = loaded.currentYear || new Date().getFullYear();
                 state.collapsedPhases = new Set(loaded.collapsedPhases || []);
